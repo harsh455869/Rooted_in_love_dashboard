@@ -125,12 +125,42 @@ const [city, setcity] = useState('')
     //     console.log(appointmentList);
     //   });
   }
+  const onDeleteData=()=>{
+    const data={category_id:categoryData?._id}
+    const res = axios
+      .post(
+        `${config.serverURL}admin/productcategory/delete`
+        ,data
+      )
+      .then(() => {
+      
+        toast("Sucessfully Deleted", {
+          position: "bottom-center",
+          type: "success",
+        });
+        setTimeout(()=>{
+          window.location.reload();
+        }, 1000)
+
+       
+     
+      
+       
+        
+       
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+     
+  }
 
   useEffect(() => {
     if(!props.addnew){
       getData();
     }
     else{
+      setname('')
       const arr=['','','','','']
     //   setbenefits(arr)
     }
@@ -220,8 +250,21 @@ const [city, setcity] = useState('')
                   </div>
               </div> */}
                 <div className="row">
-                  <div className="col-6">
-                    {/* <input className="form" id="isUserActive" type="text" value={customerData.isUserActive ? "Yes" : "No"} onChange={onChangeHandler} readOnly></input> */}
+                <div className="col-6">
+                    <button
+                      onClick={onDeleteData}
+                      className="form"
+                      style={{
+                        borderWidth: 0,
+                        backgroundColor: "red",
+                        borderRadius: 10,
+                        color: "white",
+                        fontSize: 15,
+                        padding: 10,
+                      }}
+                    >
+                      {"Delete"}
+                    </button>
                   </div>
                   <div className="col-6">
                     <button

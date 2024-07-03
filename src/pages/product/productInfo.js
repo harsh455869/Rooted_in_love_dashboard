@@ -92,6 +92,35 @@ function ProductInfo(props) {
     fileter = allhealthconditions?.filter((item) => item?.name != value?.name);
     sethealthconditonsname([...fileter]);
   };
+  const onDeleteData=()=>{
+    const data={product_id:productData?._id}
+    const res = axios
+      .post(
+        `${config.serverURL}admin/product/delete`
+        ,data
+      )
+      .then(() => {
+      
+        toast("Sucessfully Deleted", {
+          position: "bottom-center",
+          type: "success",
+        });
+        setTimeout(()=>{
+          window.location.reload();
+        }, 1000)
+
+       
+     
+      
+       
+        
+       
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+     
+  }
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -753,9 +782,22 @@ display:'flex',
                   </div>
                 <br/>
                 <div className="row">
-                  <div className="col-6">
-                    {/* <input className="form" id="isUserActive" type="text" value={customerData.isUserActive ? "Yes" : "No"} onChange={onChangeHandler} readOnly></input> */}
-                  </div>
+                <div className="col-6">
+                <button
+                      onClick={onDeleteData}
+                      className="form"
+                      style={{
+                        borderWidth: 0,
+                        backgroundColor: "red",
+                        borderRadius: 10,
+                        color: "white",
+                        fontSize: 15,
+                        padding: 10,
+                      }}
+                    >
+                      {"Delete"}
+                    </button>
+                    </div>
                   <div className="col-6">
                     <button
                       onClick={onChangeHandler}

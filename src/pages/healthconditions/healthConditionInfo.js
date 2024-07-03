@@ -65,7 +65,35 @@ const [city, setcity] = useState('')
         console.log(e);
       });}
   };
+  const onDeleteData=()=>{
+    const data={health_condition_id:healthconditionData?._id}
+    const res = axios
+      .post(
+        `${config.serverURL}admin/healthcondition/delete`
+        ,data
+      )
+      .then(() => {
+      
+        toast("Sucessfully Deleted", {
+          position: "bottom-center",
+          type: "success",
+        });
+        setTimeout(()=>{
+          window.location.reload();
+        }, 1000)
 
+       
+     
+      
+       
+        
+       
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+     
+  }
   function submitHandler() {
     axios
       .patch(
@@ -222,9 +250,22 @@ const [city, setcity] = useState('')
                   </div>
               </div> */}
                 <div className="row">
-                  <div className="col-6">
-                    {/* <input className="form" id="isUserActive" type="text" value={customerData.isUserActive ? "Yes" : "No"} onChange={onChangeHandler} readOnly></input> */}
-                  </div>
+                <div className="col-6">
+                <button
+                      onClick={onDeleteData}
+                      className="form"
+                      style={{
+                        borderWidth: 0,
+                        backgroundColor: "red",
+                        borderRadius: 10,
+                        color: "white",
+                        fontSize: 15,
+                        padding: 10,
+                      }}
+                    >
+                      {"Delete"}
+                    </button>
+                    </div>
                   <div className="col-6">
                     <button
                       onClick={onChangeHandler}

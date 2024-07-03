@@ -85,6 +85,36 @@ const [image, setimage] = useState(categoryData?.image)
     // console.log(base64);
     setimage(base64);
   };
+  const onDeleteData=()=>{
+    const data={sub_category_id:categoryData?._id}
+    const res = axios
+      .post(
+        `${config.serverURL}admin/productsubcategory/delete`
+        ,data
+      )
+      .then(() => {
+      
+        toast("Sucessfully Deleted", {
+          position: "bottom-center",
+          type: "success",
+        });
+        setTimeout(()=>{
+          window.location.reload();
+        }, 1000)
+
+       
+     
+      
+       
+        
+       
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+     
+  }
+
   function submitHandler() {
     axios
       .patch(
@@ -228,6 +258,7 @@ const [image, setimage] = useState(categoryData?.image)
                     {/* <input className="form" id="isUserActive" type="text" value={customerData.isUserActive ? "Yes" : "No"} onChange={onChangeHandler} readOnly></input> */}
                   </div>
                   <div className="col-6">
+                    
                     <button
                       onClick={onChangeHandler}
                       className="form"
@@ -242,6 +273,27 @@ const [image, setimage] = useState(categoryData?.image)
                     >
                       {props.addnew?'Create':'Save'}
                     </button>
+                    <br/>
+                    <button
+                      onClick={onDeleteData}
+                      className="form"
+                      style={{
+                        borderWidth: 0,
+                        backgroundColor: "red",
+                        borderRadius: 10,
+                        color: "white",
+                        fontSize: 15,
+                        padding: 10,
+                      }}
+                    >
+                      {"Delete"}
+                    </button>
+                  </div>
+
+                </div>
+                <div className="row">
+                <div className="col-6">
+                   
                   </div>
                 </div>
               

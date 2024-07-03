@@ -186,7 +186,7 @@ function UserList(){
                                 <table className="table">
                                     <thead>
                                           <tr>
-                                            <th>IS USER ACTIVE</th>    
+                                            {/* <th>IS USER ACTIVE</th>     */}
                                             {/* <th>MEMBERSHIP ID</th> */}
                                             <th>CUSTOMER NAME</th>   
                                             <th>MOBILE NUMBER</th>
@@ -201,7 +201,7 @@ function UserList(){
                                         // .slice((currentPage - 1) * pagePostsLimit, currentPage * pagePostsLimit)
                                         ((data)?(data):[])?.map((item,index)=>{
                                             return <tr key={ index }>
-                                                <td>{item.disable ? <img src="./Ellipse 1.svg" width="10%"/>:<img src="../../images/Ellipse 1.svg" width="10%"/>}</td>
+                                                {/* <td>{item.disable ? <img src="./Ellipse 1.svg" width="10%"/>:<img src="../../images/Ellipse 1.svg" width="10%"/>}</td> */}
                                                 <td className="invoiceNo" onClick={()=>getUserInfoForm(item)}>{item.name}</td>
                                                 {/* <td>{item.name}</td> */}
                                                 <td>{item.phoneno}</td>
