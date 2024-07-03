@@ -150,7 +150,7 @@ function UserList(){
         axios.get(`${config.serverURL}admin/getusers`)
         .then((res)=>{
            setData(res.data?.data)
-            // setRecords(res.data.length);
+            setRecords(res.data.data?.length);
             console.log(res.data);
         })
 
@@ -180,7 +180,15 @@ function UserList(){
                                 <p className="tracker">Tracker to monitor the status of all the customers</p>
                             </div>
                         </div>
-                     
+                        <div className="row upperhead">
+                            <div className="col-5 my-3">
+                            <input id="search" className="search" type="text"  placeholder="Search" onChange={(e)=>setSearch(e.target.value)} />
+                            </div>                           
+                            <div className="col-1"></div>
+                            <div className="col-4">
+                                <p className="showingrecords">Showing Records...{records}</p>
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-lg-12 col-12 setheight2">
                                 <table className="table">
@@ -199,7 +207,9 @@ function UserList(){
                                     <tbody>
                                     {
                                         // .slice((currentPage - 1) * pagePostsLimit, currentPage * pagePostsLimit)
-                                        ((data)?(data):[])?.map((item,index)=>{
+                                        data.filter(
+                                            (item) =>
+                                            item.name.toLowerCase().includes(search.toLowerCase())).map((item,index)=>{
                                             return <tr key={ index }>
                                                 {/* <td>{item.disable ? <img src="./Ellipse 1.svg" width="10%"/>:<img src="../../images/Ellipse 1.svg" width="10%"/>}</td> */}
                                                 <td className="invoiceNo" onClick={()=>getUserInfoForm(item)}>{item.name}</td>

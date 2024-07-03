@@ -268,7 +268,7 @@ const handleRemoveImage=(inex)=>{
         setfeeding_instruction(productdata?.feeding_instruction);
         //  console.log(age_needed);
         //  const arr=JSON.parse(productdata?.age_needed)
-        //  setage_needed(productdata?.age_needed)
+         setage_needed(productdata?.age_needed)
         setprice(productdata?.price);
         setprice_between(productdata?.price_between);
         setgst(productdata?.gst);

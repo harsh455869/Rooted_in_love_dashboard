@@ -254,7 +254,7 @@ function HealthConditionList() {
                         </div>
                         <div className="row upperhead">
                             <div className="col-5 my-3">
-                                {/* <input id="search" className="search" type="text"  placeholder="Search" onChange={onChangeHandler} onKeyUp={event => event.key === "Enter" ? applySearch() : null}/> */}
+                            <input id="search" className="search" type="text"  placeholder="Search" onChange={(e)=>setSearch(e.target.value)} />
                             </div>
                            
                             <div className="col-1"></div>
@@ -285,7 +285,9 @@ function HealthConditionList() {
                                     <tbody style={{overflow:'scroll'}}>
                                     {
                                         // .slice((currentPage - 1) * pagePostsLimit, currentPage * pagePostsLimit)
-                                        data.map((item,index)=>{
+                                        data.filter(
+                                            (item) =>
+                                            item.name.toLowerCase().includes(search.toLowerCase())).map((item,index)=>{
                                             return <tr key={ index }>
                                                 {/* <td>{item.isUserActive ? <img src="images/Ellipse 4.svg" width="10%"/>: <img src="images/Ellipse 1.svg" width="10%"/>}</td> */}
                                                 <td className="invoiceNo" onClick={()=>getUserInfoForm(item)}>{item.name}</td>
