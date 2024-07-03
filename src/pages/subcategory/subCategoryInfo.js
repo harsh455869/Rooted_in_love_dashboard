@@ -274,7 +274,7 @@ const [image, setimage] = useState(categoryData?.image)
                       {props.addnew?'Create':'Save'}
                     </button>
                     <br/>
-                    <button
+                    {/* <button
                       onClick={onDeleteData}
                       className="form"
                       style={{
@@ -287,7 +287,7 @@ const [image, setimage] = useState(categoryData?.image)
                       }}
                     >
                       {"Delete"}
-                    </button>
+                    </button> */}
                   </div>
 
                 </div>
