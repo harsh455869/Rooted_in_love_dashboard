@@ -62,6 +62,10 @@ const gotoDashboard=(screen)=>{
                     <img className="dashboard" src="https://banner2.cleanpng.com/20191024/sxu/transparent-health-icon-medical-icon-lifeline-in-a-heart-outli-5db133e3932a99.7637511515718942436028.jpg" />
                     <p className="filter" style={{color:'black',textAlign:'center'}}>Health Condition</p>
                 </div>
+                <div className="col-12" onClick={()=>gotoDashboard('bcs')}>
+                    <img className="dashboard" src="https://banner2.cleanpng.com/20191024/sxu/transparent-health-icon-medical-icon-lifeline-in-a-heart-outli-5db133e3932a99.7637511515718942436028.jpg" />
+                    <p className="filter" style={{color:'black',textAlign:'center'}}>Bcs</p>
+                </div>
                 
                 
                

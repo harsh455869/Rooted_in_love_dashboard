@@ -7,6 +7,8 @@ import VideoList from './pages/videos/videoList'
 import SubCategoryList from './pages/subcategory/subCategoryList'
 import ProductList from './pages/product/productList'
 import HealthConditionList from './pages/healthconditions/healthConditionList'
+import BcsList from './pages/bcs/bcsList'
+import Login from './pages/login/login'
 function App() {
   return (
     <BrowserRouter>
@@ -25,8 +27,9 @@ function App() {
          <Route path="/videos" element={<VideoList/>}/>
          <Route path="/products" element={<ProductList/>} />
          <Route path="/healthconditions" element={<HealthConditionList/>} />
-         {/*  
-         <Route path="/societies" element={<SocietyList></SocietyList>} />  */}
+          
+         <Route path="/bcs" element={<BcsList/>} /> 
+         <Route path="/login" element={<Login/>} /> 
 
       </Routes>
     </BrowserRouter>
