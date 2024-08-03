@@ -10,6 +10,7 @@ import HealthConditionList from './pages/healthconditions/healthConditionList'
 import BcsList from './pages/bcs/bcsList'
 import Login from './pages/login/login'
 import OrderList from './pages/orders/OrderList'
+import ConsultationList from './pages/consultation/ConsultationList.js'
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ function App() {
          <Route path="/bcs" element={<BcsList/>} /> 
          <Route path="/login" element={<Login/>} /> 
          <Route path="/orders" element={<OrderList/>} /> 
+         <Route path="/consults" element={<ConsultationList/>} /> 
       </Routes>
     </BrowserRouter>
   )

@@ -28,7 +28,7 @@ function CustomerInfo(props) {
   const [city, setcity] = useState('')
   const [isUserActive, setisUserActive] = useState(customerData?.disable)
   const [userType, setuserType] = useState("customer")
-  
+  const [orderData, setorderData] = useState([])
   const [active, setactive] = useState(false)
   const onChangeHandler = (e) => {
     let value = e.target.value;
@@ -209,16 +209,13 @@ function CustomerInfo(props) {
     //     setcity(res?.data?.city)
     //     setactive((res?.data?.status)=='active'?false:true)
     //   });
-    // axios
-    //   .get(
-    //     `${config.serverURL}/vehicles?filter={"order":"createdAt desc","where":{"userId":"${props.customerInfo.userId}"},"include":[{"relation":"membership"}]}`
-    //   )
-    //   .then((res) => {
-    //     // console.log(res.data);
-    //     setVehicleData(res.data);
-    //     console.log(vehicleData);
-    //   });
+    // axios.get(`${config.serverURL}admin/order/getall`)
+    // .then((res)=>{
+    //     setorderData(res?.data?.data);
+   
+    // }).catch(()=>{
 
+    // })
     // axios
     //   .get(
     //     `${config.serverURL}/users?filter={"order":"createdAt desc","where":{"userType":"partner"}}`
@@ -264,8 +261,8 @@ function CustomerInfo(props) {
                 <Tabs value={value} onChange={handleTabs}>
                   <Tab label="Customer Details" />
                   <Tab label="Pet List" />
-                  {/* 
-                  <Tab label="Appointments" /> */}
+                  
+                  {/* <Tab label="Orders" />  */}
                 </Tabs>
               </AppBar>
 
@@ -537,6 +534,34 @@ function CustomerInfo(props) {
                     )
                   );
                 })}
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+            {
+                  orderData?.products?.map((item)=>{
+                    return( <div style={{boxShadow:'revert',borderWidth:1,borderColor:'GrayText'}} className="row my-4">
+                      <div style={{display:'flex',justifyContent:'space-between'}}>
+                        <div style={{display:'flex',gap:20}}>
+                        <img style={{height:'100px',width:'100px',borderRadius:5}} src={config.serverURL+item?.image}/>
+                     <div>
+                      <h4>{item?.name}</h4>
+                      <h6>Quantity:{item?.quantity}</h6>
+                      </div>
+                      </div>
+                     
+                      </div>
+                    </div>)
+                  })
+                  
+                 
+                    
+                    
+                }
+                <div style={{justifyContent:'flex-end'}} className="row">
+                <div className="col-5">
+                   <p style={{fontSize:16,lineHeight:'17px'}}><span style={{fontSize:18,fontWeight:'bold'}}>Total Amount</span> - Rs.{orderData?.total}</p>
+                   <p style={{fontSize:12}}>payment Id:{orderData?.payment_id}</p>
+                  </div>
+                </div>
             </TabPanel>
               
             </div>

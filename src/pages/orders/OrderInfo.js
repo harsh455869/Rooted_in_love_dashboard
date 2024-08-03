@@ -183,10 +183,12 @@ const [image, setimage] = useState(categoryData?.image)
                       <div style={{display:'flex',justifyContent:'space-between'}}>
                         <div style={{display:'flex',gap:20}}>
                         <img style={{height:'100px',width:'100px',borderRadius:5}} src={config.serverURL+item?.image}/>
-                     
+                     <div>
                       <h4>{item?.name}</h4>
-                      </div>
                       <h6>Quantity:{item?.quantity}</h6>
+                      </div>
+                      </div>
+                     
                       </div>
                     </div>)
                   })
@@ -195,8 +197,6 @@ const [image, setimage] = useState(categoryData?.image)
                     
                     
                 }
-               
-           
                 <div style={{justifyContent:'flex-end'}} className="row">
                 <div className="col-5">
                    <p style={{fontSize:16,lineHeight:'17px'}}><span style={{fontSize:18,fontWeight:'bold'}}>Total Amount</span> - Rs.{orderData?.total}</p>

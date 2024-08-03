@@ -40,6 +40,14 @@ const gotoDashboard=(screen)=>{
                     <img className="timer" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJlUe5QjsmfcQiaRcSBKl5TO4SsHT993cc6A&s" />
                     <p className="filter" style={{color:'black',textAlign:'center'}}>Customer</p>
                 </div>
+                <div className="col-12" onClick={()=>gotoDashboard('orders')}>
+                    <img className="dashboard" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8lZsA3JNe_0bPy53ADp_sM-kbStGyEJ999A&s" />
+                    <p className="filter" style={{color:'black',textAlign:'center'}}>Orders</p>
+                </div>
+                <div className="col-12" onClick={()=>gotoDashboard('consults')}>
+                    <img className="dashboard" src="https://cdn-icons-png.flaticon.com/512/1478/1478254.png" />
+                    <p className="filter" style={{color:'black',textAlign:'center'}}>Consultations</p>
+                </div>
                 <div className="col-12" onClick={()=>gotoDashboard('categories')}>
                     <img className="dashboard" src="https://cdn-icons-png.flaticon.com/512/2603/2603910.png" />
                     <p className="filter" style={{color:'black',textAlign:'center'}}>Category</p>
@@ -57,10 +65,7 @@ const gotoDashboard=(screen)=>{
                     <img className="dashboard" src="https://t3.ftcdn.net/jpg/01/09/40/34/360_F_109403483_qocRmeSFXJ6KlF3yoaDBuI3CZOiNGfCw.jpg" />
                     <p className="filter" style={{color:'black',textAlign:'center'}}>Video</p>
                 </div>
-                <div className="col-12" onClick={()=>gotoDashboard('orders')}>
-                    <img className="dashboard" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8lZsA3JNe_0bPy53ADp_sM-kbStGyEJ999A&s" />
-                    <p className="filter" style={{color:'black',textAlign:'center'}}>Orders</p>
-                </div>
+                
                 <div className="col-12" onClick={()=>gotoDashboard('healthconditions')}>
                     <img className="dashboard" src="https://banner2.cleanpng.com/20191024/sxu/transparent-health-icon-medical-icon-lifeline-in-a-heart-outli-5db133e3932a99.7637511515718942436028.jpg" />
                     <p className="filter" style={{color:'black',textAlign:'center'}}>Health Condition</p>
