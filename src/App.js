@@ -9,6 +9,7 @@ import ProductList from './pages/product/productList'
 import HealthConditionList from './pages/healthconditions/healthConditionList'
 import BcsList from './pages/bcs/bcsList'
 import Login from './pages/login/login'
+import OrderList from './pages/orders/OrderList'
 function App() {
   return (
     <BrowserRouter>
@@ -30,7 +31,7 @@ function App() {
           
          <Route path="/bcs" element={<BcsList/>} /> 
          <Route path="/login" element={<Login/>} /> 
-
+         <Route path="/orders" element={<OrderList/>} /> 
       </Routes>
     </BrowserRouter>
   )
