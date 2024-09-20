@@ -23,7 +23,8 @@ function App() {
          } />
         
           */}
-         <Route path="/" element={<UserList/>} /> 
+           <Route path="/" element={<Login/>} /> 
+         <Route path="/userList" element={<UserList/>} /> 
          <Route path="/subcategories" element={<SubCategoryList/>} />
          <Route path="/categories" element={<CategoryList/>} />
          <Route path="/videos" element={<VideoList/>}/>
@@ -31,7 +32,7 @@ function App() {
          <Route path="/healthconditions" element={<HealthConditionList/>} />
           
          <Route path="/bcs" element={<BcsList/>} /> 
-         <Route path="/login" element={<Login/>} /> 
+        
          <Route path="/orders" element={<OrderList/>} /> 
          <Route path="/consults" element={<ConsultationList/>} /> 
       </Routes>

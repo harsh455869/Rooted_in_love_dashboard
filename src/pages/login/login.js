@@ -1,8 +1,47 @@
 import React,{useState,useEffect} from 'react'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import config from "../../config";
 
 function Login() {
     const [username, setusername] = useState('')
     const [password, setpassword] = useState('')
+    const navigation=useNavigate();
+
+    const onChangeHandler = () => {
+      let data = {
+        username,
+        password
+      };
+      
+        if(username.length<=0 || password.length<=0 ){
+          toast("Fill All The Fields", {
+            position: "bottom-center",
+            type: "error",
+          });
+          return;
+        }
+        const res = axios
+        .post(
+          `${config.serverURL}admin/login`,
+          data
+        )
+        .then(() => {
+          toast("Sucessfully Login", {
+              position: "bottom-center",
+              type: "success",
+            });
+            // window.location.reload()
+            navigation('/userList')
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      
+    }
+
   return (
     <div style={{alignItems:'center',justifyContent:'center',height:1000,width:'100%',display:'flex'}}>
     <div  style={{height:500,width:500,margin:'auto',borderWidth:2,borderColor:'black',backgroundColor:'beige',alignItems:'center',display:'flex',flexDirection:'column',padding:50}}>
@@ -31,7 +70,7 @@ function Login() {
     </div>
     <div className="col-6">
                     <button
-                      onClick={()=>{}}
+                      onClick={()=>onChangeHandler()}
                       className="form"
                       style={{
                         borderWidth: 0,
@@ -41,12 +80,13 @@ function Login() {
                         fontSize: 15,
                         padding: 10,
                       }}
+
                     >
                       {'Login'}
                     </button>
   </div>
   </div>
-  
+  <ToastContainer></ToastContainer>
   </div>
   )
 }
