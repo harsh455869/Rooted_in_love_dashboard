@@ -23,6 +23,15 @@ function Login() {
           });
           return;
         }
+        if(
+          data.username != "adminamit" && data.password != "Admin123"
+        ){
+          toast("login details are wrong", {
+            position: "bottom-center",
+            type: "error",
+          });
+          return;
+        }
         const res = axios
         .post(
           `${config.serverURL}admin/login`,

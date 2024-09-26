@@ -29,6 +29,7 @@ function ProductInfo(props) {
   const [price, setprice] = useState("");
   const [price_between, setprice_between] = useState("");
   const [gst, setgst] = useState("");
+  const [disclaimer, setdisclaimer] = useState("");
   const [is_available, setis_available] = useState("");
   const [hot_selling, sethot_selling] = useState("");
   const [description, setdescription] = useState("");
@@ -108,12 +109,6 @@ function ProductInfo(props) {
         setTimeout(()=>{
           window.location.reload();
         }, 1000)
-
-       
-     
-      
-       
-        
        
       })
       .catch((e) => {
@@ -146,6 +141,7 @@ function ProductInfo(props) {
       description,
       benefits,
       ingredients,
+      disclaimer,
       storage,
       feeding_instruction,
       age_needed,
@@ -178,6 +174,54 @@ function ProductInfo(props) {
         .catch((e) => {
           console.error(e);
         });
+    // let data = {
+    //   name,
+    //   age_needed, 
+    //   price, 
+    //   images, // Required field (at least one image)
+    //   product_category_id: parseInt(product_category_id), // Required field
+    // };
+    
+    // // Add optional fields only if they are present
+    // if (description) data.description = description;
+    // if (benefits) data.benefits = benefits;
+    // if (ingredients) data.ingredients = ingredients;
+    // if (storage) data.storage = storage;
+    // if (feeding_instruction) data.feeding_instruction = feeding_instruction;
+    // if (disclaimer) data.disclaimer = disclaimer;
+    // if (price_between) data.price_between = price_between;
+    // if (gst) data.gst = gst;
+    // if (sizes) data.sizes = sizes;
+    // if (health_conditions) data.health_conditions = health_conditions;
+    // if (related_product) data.related_product = related_product;
+    // if (hot_selling_product) data.hot_selling_product = hot_selling_product;
+    // if (breed) data.breed = breed;
+    
+    // // Optional flags with default values
+    // data.is_available = is_available || "1"; // Default to "1" (available)
+    // data.hot_selling = hot_selling || "1"; // Default to "1" (hot selling)
+    // data.new = new_product || "1"; // Default to "1" (new)
+    // data.sale = sale || "1"; // Default to "1" (on sale)
+    
+    // console.log(data);
+    
+    // if (props.addnew) {
+    //   if (name.length === 0) {
+    //     return;
+    //   }
+    //   axios
+    //     .post(`${config.serverURL}admin/product/add`, data)
+    //     .then(() => {
+    //       toast("Successfully Created", {
+    //         position: "bottom-center",
+    //         type: "success",
+    //       });
+    //       window.location.reload();
+    //     })
+    //     .catch((e) => {
+    //       console.error(e);
+    //     });
+    
     } else {
       data = {  name,
         description,
@@ -188,6 +232,7 @@ function ProductInfo(props) {
         age_needed,
         price,
         price_between,
+        disclaimer,
         gst,
         product_category_id:parseInt(product_category_id),
         product_sub_category_id:parseInt(product_sub_category_id),
@@ -263,6 +308,7 @@ const handleRemoveImage=(inex)=>{
         setname(productdata?.name)
         setdescription(productdata?.description);
         setbenefits(productdata?.benefits);
+        setdisclaimer(productdata?.disclaimer)
         setingredients(productdata?.ingredients);
         setstorage(productdata?.storage);
         setfeeding_instruction(productdata?.feeding_instruction);
@@ -456,6 +502,21 @@ const handleRemoveImage=(inex)=>{
                       type='button'
                       value={feeding_instruction}
                      onChange={(e)=>{setfeeding_instruction(e.target.value)}}
+                    ></textarea>
+                  </div>
+                
+              </div>
+              <div className="row">
+                  <div className="col-12">
+                    <label>Disclaimer</label>
+                    <textarea
+                    rows={10}
+                    
+                      className="form"
+                      id="text"
+                      type='button'
+                      value={disclaimer}
+                     onChange={(e)=>{setdisclaimer(e.target.value)}}
                     ></textarea>
                   </div>
                 
