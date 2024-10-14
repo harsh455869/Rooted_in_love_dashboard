@@ -866,4 +866,22 @@ label{
   text-align: center;
   margin-bottom: 2%;
 }
+.dropdown {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute; /* Adjust as necessary */
+  background-color: white;
+  z-index: 1000;
+}
+
+.dropdown li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown li:hover {
+  background-color: #f0f0f0;
+}
 

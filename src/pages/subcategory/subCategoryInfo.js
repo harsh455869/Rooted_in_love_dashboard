@@ -14,57 +14,58 @@ function SubCategoryInfo(props) {
   console.log(props);
   // console.log(props.productInfo.productId);
   const [value, setValue] = useState(0);
-const categoryData=props?.categoryData
+  const categoryData = props?.categoryData
   const [customerData, setcustomerData] = useState([]);
   const [vehicleData, setVehicleData] = useState({});
- const [name, setname] = useState(categoryData?.name)
- const [area, setarea] = useState('')
- const [status, setstatus] = useState(false)
-const [city, setcity] = useState('')
-const [image, setimage] = useState(categoryData?.image)
+  const [name, setname] = useState(categoryData?.name)
+  const [area, setarea] = useState('')
+  const [status, setstatus] = useState(false)
+  const [city, setcity] = useState('')
+  const [image, setimage] = useState(categoryData?.image)
   const onChangeHandler = () => {
     let data = {
-      name,image:image
-      
+      name, image: image
+
     };
-    if(props.addnew){
-      if(name.length<0){
+    if (props.addnew) {
+      if (name.length < 0) {
         return;
       }
       const res = axios
-      .post(
-        `${config.serverURL}admin/productsubcategory/add`,
-        data
-      )
-      .then(() => {
-        toast("Sucessfully Created", {
+        .post(
+          `${config.serverURL}admin/productsubcategory/add`,
+          data
+        )
+        .then(() => {
+          toast("Sucessfully Created", {
             position: "bottom-center",
             type: "success",
           });
           window.location.reload()
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    }
-    else{
-      data={name,sub_category_id:categoryData?._id,image}
-      const res = axios
-      .post(
-        `${config.serverURL}admin/productsubcategory/update`,
-        data
-      )
-      .then(() => {
-        toast("Sucessfully Updated", {
-          position: "bottom-center",
-          type: "success",
+        })
+        .catch((e) => {
+          console.log(e);
         });
-        window.location.reload()
-      })
-      .catch((e) => {
-        console.error(e)
-        console.log(e);
-      });}
+    }
+    else {
+      data = { name, sub_category_id: categoryData?._id, image }
+      const res = axios
+        .post(
+          `${config.serverURL}admin/productsubcategory/update`,
+          data
+        )
+        .then(() => {
+          toast("Sucessfully Updated", {
+            position: "bottom-center",
+            type: "success",
+          });
+          window.location.reload()
+        })
+        .catch((e) => {
+          console.error(e)
+          console.log(e);
+        });
+    }
   };
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -85,34 +86,34 @@ const [image, setimage] = useState(categoryData?.image)
     // console.log(base64);
     setimage(base64);
   };
-  const onDeleteData=()=>{
-    const data={sub_category_id:categoryData?._id}
+  const onDeleteData = () => {
+    const data = { sub_category_id: categoryData?._id }
     const res = axios
       .post(
         `${config.serverURL}admin/productsubcategory/delete`
-        ,data
+        , data
       )
       .then(() => {
-      
+
         toast("Sucessfully Deleted", {
           position: "bottom-center",
           type: "success",
         });
-        setTimeout(()=>{
+        setTimeout(() => {
           window.location.reload();
         }, 1000)
 
-       
-     
-      
-       
-        
-       
+
+
+
+
+
+
       })
       .catch((e) => {
         console.log(e);
       });
-     
+
   }
 
   function submitHandler() {
@@ -149,7 +150,7 @@ const [image, setimage] = useState(categoryData?.image)
     console.log(val);
     setValue(val);
   };
- 
+
   function getData() {
     // axios
     //   .get(
@@ -176,20 +177,20 @@ const [image, setimage] = useState(categoryData?.image)
   }
 
   useEffect(() => {
-    if(!props.addnew){
+    if (!props.addnew) {
       getData();
     }
-    else{
-      if(props?.addnew){
+    else {
+      if (props?.addnew) {
         setname(''
-        
+
         )
         setimage('')
       }
-      const arr=['','','','','']
-    //   setbenefits(arr)
+      const arr = ['', '', '', '', '']
+      //   setbenefits(arr)
     }
-   
+
   }, []);
 
   const [numPages, setNumPages] = useState(null);
@@ -207,14 +208,14 @@ const [image, setimage] = useState(categoryData?.image)
             <div className="col-12">
               <p className="information">
                 {
-                  props.addnew?<>SUB-CATEGORY<span className="bolding"> CREATE</span></>:<>SUB-CATEGORY<span className="bolding"> INFO</span></>
+                  props.addnew ? <>SUB-CATEGORY<span className="bolding"> CREATE</span></> : <>SUB-CATEGORY<span className="bolding"> INFO</span></>
                 }
-                
+
               </p>
               <AppBar position="static">
                 <Tabs value={value} onChange={handleTabs}>
                   <Tab label="Sub-Category Details" />
-                 {/* { !props.addnew&&<Tab label="Active User" />} */}
+                  {/* { !props.addnew&&<Tab label="Active User" />} */}
                   {/* <Tab label="Appointments" /> */}
                 </Tabs>
               </AppBar>
@@ -248,17 +249,17 @@ const [image, setimage] = useState(categoryData?.image)
                     <br />
                   </div> */}
                 </div>
-               
+
                 <div className="row">
                   <div className="col-6">
-                  <img style={{width:200,height:200}} src={config.serverURL+image} alt="" srcset=""/>
-                  <input onChange={handleFileUpload} type="file" title={props.addnew?"upload Image":"Change Image"}>
-               
-                  </input>
+                    <img style={{ width: 200, height: 200 }} src={config.serverURL + image} alt="" srcset="" />
+                    <input onChange={handleFileUpload} type="file" title={props.addnew ? "upload Image" : "Change Image"}>
+
+                    </input>
                     {/* <input className="form" id="isUserActive" type="text" value={customerData.isUserActive ? "Yes" : "No"} onChange={onChangeHandler} readOnly></input> */}
                   </div>
                   <div className="col-6">
-                    
+
                     <button
                       onClick={onChangeHandler}
                       className="form"
@@ -271,9 +272,9 @@ const [image, setimage] = useState(categoryData?.image)
                         padding: 10,
                       }}
                     >
-                      {props.addnew?'Create':'Save'}
+                      {props.addnew ? 'Create' : 'Save'}
                     </button>
-                    <br/>
+                    <br />
                     {/* <button
                       onClick={onDeleteData}
                       className="form"
@@ -292,11 +293,11 @@ const [image, setimage] = useState(categoryData?.image)
 
                 </div>
                 <div className="row">
-                <div className="col-6">
-                   
+                  <div className="col-6">
+
                   </div>
                 </div>
-              
+
                 {/* <div className="row">
                         <div className="col-6"></div>
                         <div className="col-6 sign">
@@ -306,7 +307,7 @@ const [image, setimage] = useState(categoryData?.image)
                         </div>
                     </div>  */}
               </TabPanel>
-             {!props.addnew&& <TabPanel value={value} index={1}>
+              {!props.addnew && <TabPanel value={value} index={1}>
                 <br />
                 <div className="row">
                   <div className="col-6">

@@ -85,21 +85,11 @@ const [image, setimage] = useState(categoryData?.image)
         setTimeout(()=>{
           window.location.reload();
         }, 1000)
-
-       
-     
-      
-       
-        
-       
       })
       .catch((e) => {
         console.log(e);
-      });
-     
+      }); 
   }
-
- 
 
   const handleTabs = (e, val) => {
     console.log(val);
