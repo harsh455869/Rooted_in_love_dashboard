@@ -113,50 +113,111 @@ function HealthConditionInfo(props) {
   //   }
   // };
 
-  const onChangeHandler = async () => {
-    let healthConditionData = {
-        name,
-        recommended_product: selectedRecommended.length > 0 ? selectedRecommended.map(p => p._id) : null,
-        hot_selling_product: selectedHotSelling.length > 0 ? selectedHotSelling.map(p => p._id) : null,
-    };
+//   const onChangeHandler = async () => {
+//     let healthConditionData = {
+//         name,
+//         recommended_product: selectedRecommended.length > 0 ? selectedRecommended.map(p => p._id) : null,
+//         hot_selling_product: selectedHotSelling.length > 0 ? selectedHotSelling.map(p => p._id) : null,
+//     };
 
-    try {
-        if (props.addnew) {
-            if (name.length < 1) {
-                return;
-            }
-            // Create Health Condition
-            await axios.post(`${config.serverURL}admin/healthcondition/add`, healthConditionData);
-            toast("Successfully Created", {
-                position: "bottom-center",
-                type: "success",
-            });
-        } else {
-            // Update Health Condition
-            healthConditionData.health_condition_id = healthconditionData?._id; // Add the health condition ID for the update
-            await axios.post(`${config.serverURL}admin/healthcondition/update`, healthConditionData);
-            toast("Successfully Updated", {
-                position: "bottom-center",
-                type: "success",
-            });
-        }
+//     try {
+//         if (props.addnew) {
+//             if (name.length < 1) {
+//                 return;
+//             }
+//             // Create Health Condition
+//             await axios.post(`${config.serverURL}admin/healthcondition/add`, healthConditionData);
+//             toast("Successfully Created", {
+//                 position: "bottom-center",
+//                 type: "success",
+//             });
+//         } else {
+//             // Update Health Condition
+//             healthConditionData.health_condition_id = healthconditionData?._id; // Add the health condition ID for the update
+//             await axios.post(`${config.serverURL}admin/healthcondition/update`, healthConditionData);
+//             toast("Successfully Updated", {
+//                 position: "bottom-center",
+//                 type: "success",
+//             });
+//         }
 
-        // Update related products regardless of add or update
-        await axios.post(`${config.serverURL}admin/healthcondition/relatedproducts/add`, {
+//         // Update related products regardless of add or update
+//         await axios.post(`${config.serverURL}admin/healthcondition/relatedproducts/add`, {
+//             health_condition_id: healthconditionData?._id,
+//             recommended_product: healthConditionData.recommended_product,
+//             hot_selling_product: healthConditionData.hot_selling_product,
+//         });
+
+//         window.location.reload();
+//     } catch (error) {
+//         console.error(error);
+//         toast("An error occurred", {
+//             position: "bottom-center",
+//             type: "error",
+//         });
+//     }
+// };
+
+const onChangeHandler = async () => {
+  let healthConditionData = {
+      name,
+      recommended_product: selectedRecommended.length > 0 ? selectedRecommended.map(p => p._id) : null,
+      hot_selling_product: selectedHotSelling.length > 0 ? selectedHotSelling.map(p => p._id) : null,
+  };
+
+  console.log("Health Condition Data:", healthConditionData); // Log for debugging
+
+  try {
+      if (props.addnew) {
+          if (name.length < 1) {
+              toast("Name is required", {
+                  position: "bottom-center",
+                  type: "error",
+              });
+              return;
+          }
+          // Create Health Condition
+          await axios.post(`${config.serverURL}admin/healthcondition/add`, healthConditionData);
+          toast("Successfully Created", {
+              position: "bottom-center",
+              type: "success",
+          });
+      } else {
+          if (!healthconditionData?._id) {
+              toast("Health condition ID is required for update", {
+                  position: "bottom-center",
+                  type: "error",
+              });
+              return;
+          }
+
+          // Update Health Condition
+          healthConditionData.health_condition_id = healthconditionData?._id; // Ensure this is set
+          await axios.post(`${config.serverURL}admin/healthcondition/update`, healthConditionData);
+          toast("Successfully Updated", {
+              position: "bottom-center",
+              type: "success",
+          });
+          await axios.post(`${config.serverURL}admin/healthcondition/relatedproducts/add`, {
             health_condition_id: healthconditionData?._id,
             recommended_product: healthConditionData.recommended_product,
             hot_selling_product: healthConditionData.hot_selling_product,
         });
+      }
 
-        window.location.reload();
-    } catch (error) {
-        console.error(error);
-        toast("An error occurred", {
-            position: "bottom-center",
-            type: "error",
-        });
-    }
+  
+     
+
+      window.location.reload();
+  } catch (error) {
+      console.error(error);
+      toast("An error occurred", {
+          position: "bottom-center",
+          type: "error",
+      });
+  }
 };
+
 
   const onDeleteData = () => {
     const data = { health_condition_id: healthconditionData?._id };
