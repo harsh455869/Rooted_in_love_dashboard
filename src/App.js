@@ -11,6 +11,8 @@ import BcsList from './pages/bcs/bcsList'
 import Login from './pages/login/login'
 import OrderList from './pages/orders/OrderList'
 import ConsultationList from './pages/consultation/ConsultationList.js'
+import BreedList from './pages/breed/breedList.js'
+import Profile from './pages/profile/profile.js'
 function App() {
   return (
     <BrowserRouter>
@@ -24,6 +26,7 @@ function App() {
         
           */}
            <Route path="/" element={<Login/>} /> 
+           <Route path="/profile" element={<Profile/>} /> 
          <Route path="/userList" element={<UserList/>} /> 
          <Route path="/subcategories" element={<SubCategoryList/>} />
          <Route path="/categories" element={<CategoryList/>} />
@@ -35,6 +38,7 @@ function App() {
         
          <Route path="/orders" element={<OrderList/>} /> 
          <Route path="/consults" element={<ConsultationList/>} /> 
+         <Route path="/breed" element={<BreedList/>} /> 
       </Routes>
     </BrowserRouter>
   )

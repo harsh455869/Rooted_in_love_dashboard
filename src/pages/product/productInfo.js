@@ -45,7 +45,62 @@ function ProductInfo(props) {
   const [prices, setprices] = useState("");
   const [categoryData, setcategoryData] = useState([])
   const [subcategoryData, setsubcategoryData] = useState([])
- const [uri, seturi] = useState('')
+  const [uri, seturi] = useState('')
+  const [isAvailable, setIsAvailable] = useState(1);
+  const [isHotSelling, setIsHotSelling] = useState(0);
+  const [isNew, setIsNew] = useState(0);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
+  const [hotSellingProducts, setHotSellingProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [searchTermRecommended, setSearchTermRecommended] = useState("");
+  const [searchTermHotSelling, setSearchTermHotSelling] = useState("");
+
+
+  useEffect(() => {
+    // Fetch all products for recommendations and hot selling products
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(`${config.serverURL}admin/product/getall`);
+        setAllProducts(response.data.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const filteredRecommendedProducts = allProducts.filter(product =>
+    product.name.toLowerCase().includes(searchTermRecommended.toLowerCase())
+  );
+
+  const filteredHotSellingProducts = allProducts.filter(product =>
+    product.name.toLowerCase().includes(searchTermHotSelling.toLowerCase())
+  );
+
+  const handleAddRecommendedProduct = (product) => {
+    console.log(recommendedProducts, "..??", searchTermRecommended)
+    if (!recommendedProducts.some(p => p._id === product._id)) {
+      setRecommendedProducts([...recommendedProducts, product]);
+      setSearchTermRecommended('');
+    }
+  };
+
+  const handleAddHotSellingProduct = (product) => {
+    console.log(hotSellingProducts, "product...", searchTermHotSelling)
+    if (!hotSellingProducts.some(p => p._id === product._id)) {
+      setHotSellingProducts([...hotSellingProducts, product]);
+      setSearchTermHotSelling('');
+    }
+  };
+
+  const handleRemoveRecommendedProduct = (id) => {
+    setRecommendedProducts(recommendedProducts.filter(p => p._id !== id));
+  };
+
+  const handleRemoveHotSellingProduct = (id) => {
+    setHotSellingProducts(hotSellingProducts.filter(p => p._id !== id));
+  };
+
   const handleage = (e) => {
     const value = e.target.value;
     const fileter = ageData?.filter((item) => item != value);
@@ -93,28 +148,28 @@ function ProductInfo(props) {
     fileter = allhealthconditions?.filter((item) => item?.name != value?.name);
     sethealthconditonsname([...fileter]);
   };
-  const onDeleteData=()=>{
-    const data={product_id:productData?._id}
+  const onDeleteData = () => {
+    const data = { product_id: productData?._id }
     const res = axios
       .post(
         `${config.serverURL}admin/product/delete`
-        ,data
+        , data
       )
       .then(() => {
-      
+
         toast("Sucessfully Deleted", {
           position: "bottom-center",
           type: "success",
         });
-        setTimeout(()=>{
+        setTimeout(() => {
           window.location.reload();
         }, 1000)
-       
+
       })
       .catch((e) => {
         console.log(e);
       });
-     
+
   }
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -133,9 +188,11 @@ function ProductInfo(props) {
     console.log(file);
     const base64 = await convertToBase64(file);
     // console.log(base64);
-    setimages([...images,base64])
+    setimages([...images, base64])
   };
   const onChangeHandler = () => {
+    const existingRelatedProductIds = productData?.related_product || []; 
+    const existingHotSellingProductIds = productData?.hot_selling_product || [];
     let data = {
       name,
       description,
@@ -148,14 +205,18 @@ function ProductInfo(props) {
       price,
       price_between,
       gst,
-      product_category_id:parseInt(product_category_id),
-      product_sub_category_id:parseInt(product_sub_category_id),
+      product_category_id: parseInt(product_category_id),
+      product_sub_category_id: parseInt(product_sub_category_id),
       images,
       sizes,
-      health_conditions,
-      is_available:"1",
-      hot_selling:"1"
-
+      breed: health_conditions,
+      // is_available: "1",
+      // hot_selling: "1",
+      is_available: isAvailable,
+      hot_selling: isHotSelling,
+      new: isNew,
+      // related_product: Array.from(new Set([...recommendedProducts.map(p => p._id), ...existingRelatedProductIds])),
+      // hot_selling_product: Array.from(new Set([...hotSellingProducts.map(p => p._id), ...existingHotSellingProductIds])),
     };
     console.log(data);
     if (props.addnew) {
@@ -174,56 +235,57 @@ function ProductInfo(props) {
         .catch((e) => {
           console.error(e);
         });
-    // let data = {
-    //   name,
-    //   age_needed, 
-    //   price, 
-    //   images, // Required field (at least one image)
-    //   product_category_id: parseInt(product_category_id), // Required field
-    // };
-    
-    // // Add optional fields only if they are present
-    // if (description) data.description = description;
-    // if (benefits) data.benefits = benefits;
-    // if (ingredients) data.ingredients = ingredients;
-    // if (storage) data.storage = storage;
-    // if (feeding_instruction) data.feeding_instruction = feeding_instruction;
-    // if (disclaimer) data.disclaimer = disclaimer;
-    // if (price_between) data.price_between = price_between;
-    // if (gst) data.gst = gst;
-    // if (sizes) data.sizes = sizes;
-    // if (health_conditions) data.health_conditions = health_conditions;
-    // if (related_product) data.related_product = related_product;
-    // if (hot_selling_product) data.hot_selling_product = hot_selling_product;
-    // if (breed) data.breed = breed;
-    
-    // // Optional flags with default values
-    // data.is_available = is_available || "1"; // Default to "1" (available)
-    // data.hot_selling = hot_selling || "1"; // Default to "1" (hot selling)
-    // data.new = new_product || "1"; // Default to "1" (new)
-    // data.sale = sale || "1"; // Default to "1" (on sale)
-    
-    // console.log(data);
-    
-    // if (props.addnew) {
-    //   if (name.length === 0) {
-    //     return;
-    //   }
-    //   axios
-    //     .post(`${config.serverURL}admin/product/add`, data)
-    //     .then(() => {
-    //       toast("Successfully Created", {
-    //         position: "bottom-center",
-    //         type: "success",
-    //       });
-    //       window.location.reload();
-    //     })
-    //     .catch((e) => {
-    //       console.error(e);
-    //     });
-    
+      // let data = {
+      //   name,
+      //   age_needed, 
+      //   price, 
+      //   images, // Required field (at least one image)
+      //   product_category_id: parseInt(product_category_id), // Required field
+      // };
+
+      // // Add optional fields only if they are present
+      // if (description) data.description = description;
+      // if (benefits) data.benefits = benefits;
+      // if (ingredients) data.ingredients = ingredients;
+      // if (storage) data.storage = storage;
+      // if (feeding_instruction) data.feeding_instruction = feeding_instruction;
+      // if (disclaimer) data.disclaimer = disclaimer;
+      // if (price_between) data.price_between = price_between;
+      // if (gst) data.gst = gst;
+      // if (sizes) data.sizes = sizes;
+      // if (health_conditions) data.health_conditions = health_conditions;
+      // if (related_product) data.related_product = related_product;
+      // if (hot_selling_product) data.hot_selling_product = hot_selling_product;
+      // if (breed) data.breed = breed;
+
+      // // Optional flags with default values
+      // data.is_available = is_available || "1"; // Default to "1" (available)
+      // data.hot_selling = hot_selling || "1"; // Default to "1" (hot selling)
+      // data.new = new_product || "1"; // Default to "1" (new)
+      // data.sale = sale || "1"; // Default to "1" (on sale)
+
+      // console.log(data);
+
+      // if (props.addnew) {
+      //   if (name.length === 0) {
+      //     return;
+      //   }
+      //   axios
+      //     .post(`${config.serverURL}admin/product/add`, data)
+      //     .then(() => {
+      //       toast("Successfully Created", {
+      //         position: "bottom-center",
+      //         type: "success",
+      //       });
+      //       window.location.reload();
+      //     })
+      //     .catch((e) => {
+      //       console.error(e);
+      //     });
+
     } else {
-      data = {  name,
+      data = {
+        name,
         description,
         benefits,
         ingredients,
@@ -234,14 +296,30 @@ function ProductInfo(props) {
         price_between,
         disclaimer,
         gst,
-        product_category_id:parseInt(product_category_id),
-        product_sub_category_id:parseInt(product_sub_category_id),
+        product_category_id: parseInt(product_category_id),
+        product_sub_category_id: parseInt(product_sub_category_id),
         images,
         sizes,
-        health_conditions,
-        is_available:"1",
-        hot_selling:"1"
-        , product_id: productData?._id };
+        breed: health_conditions,
+        // is_available: "1",
+        // hot_selling: "1"
+        is_available: isAvailable,
+        hot_selling: isHotSelling,
+        new: isNew,
+        product_id: productData?._id,
+
+        // related_product: Array.from(new Set([
+        //   ...recommendedProducts.map(p => p._id).filter(id => id !== undefined), // Ensure valid IDs
+        //   ...existingRelatedProductIds.filter(id => id !== undefined),
+        // ])),
+    
+        // // Filter and merge hot selling products
+        // hot_selling_product: Array.from(new Set([
+        //   ...hotSellingProducts.map(p => p._id).filter(id => id !== undefined), // Ensure valid IDs
+        //   ...existingHotSellingProductIds.filter(id => id !== undefined),
+        // ])),
+      };
+      console.log(data,"datttta",recommendedProducts,hotSellingProducts)
       const res = axios
         .post(`${config.serverURL}admin/product/update`, data)
         .then(() => {
@@ -257,11 +335,11 @@ function ProductInfo(props) {
         });
     }
   };
-const handleRemoveImage=(inex)=>{
-  const filter=images?.filter((item,index)=>inex!=index);
-  setimages([...filter])
+  const handleRemoveImage = (inex) => {
+    const filter = images?.filter((item, index) => inex != index);
+    setimages([...filter])
 
-}
+  }
   function submitHandler() {
     axios
       .patch(
@@ -314,27 +392,54 @@ const handleRemoveImage=(inex)=>{
         setfeeding_instruction(productdata?.feeding_instruction);
         //  console.log(age_needed);
         //  const arr=JSON.parse(productdata?.age_needed)
-         setage_needed(productdata?.age_needed)
+        setage_needed(productdata?.age_needed)
         setprice(productdata?.price);
         setprice_between(productdata?.price_between);
         setgst(productdata?.gst);
-        setis_available(productdata?.is_available);
-        sethot_selling(productdata?.hot_selling);
+        // setis_available(productdata?.is_available);
+        // sethot_selling(productdata?.hot_selling);
         setproduct_category_id(productdata?.product_category_id);
         console.log(productdata?.product_category_id);
         setproduct_sub_category_id(productdata?.product_sub_category_id);
         setimages(productdata?.images)
         setsizes([...productdata?.sizes])
-        const ids=[]
-        const names=[]
-      productdata?.health_conditions?.map((item)=>{
-        ids.push(item?.health_condition_id)
-        names.push(item?.name)
-      })
-     
-      sethealth_conditions(ids)
-      sethealthconditonsname(names)
-        console.log(res.data);
+
+        setIsAvailable(productdata?.is_available ? 1 : 0); // Ensure it's 1 or 0
+        setIsHotSelling(productdata?.hot_selling ? 1 : 0); // Ensure it's 1 or 0
+        setIsNew(productdata?.new ? 1 : 0);
+        // const ids = []
+        // const names = []
+        // productdata?.breed?.map((item) => {
+        //   ids.push(item?.breed)
+        //   names.push(item?.name)
+        // })
+
+        // sethealth_conditions(ids)
+        // sethealthconditonsname(names)
+        // console.log(names,ids,"....>>",productData)
+        // console.log(res.data);
+        const ids = [];
+        const names = [];
+
+        // Check if breed data exists
+        if (Array.isArray(productdata?.breeds)) {
+          productdata.breeds.forEach((item) => {
+            if (item?._id) { // Assuming _id is the breed ID
+              ids.push(item._id);
+              names.push(item.name);
+            }
+          });
+        }
+
+        // Set the state for health conditions
+        sethealth_conditions(ids);
+        sethealthconditonsname(names);
+        const hotSellingIds = productdata?.hot_selling_products?.map(product => product._id) || [];
+        setHotSellingProducts(hotSellingIds);
+        const relatedIds = productdata?.related_products?.map(product => product._id) || [];
+        setRecommendedProducts(relatedIds);
+
+        console.log(names, ids, "....>>", productdata);
       });
 
     // axios
@@ -350,16 +455,16 @@ const handleRemoveImage=(inex)=>{
 
   useEffect(() => {
     axios
-      .get(`${config.serverURL}admin/product/gethealthconditionsname`)
+      .get(`${config.serverURL}admin/breed/getall`)
       .then((res) => {
         setallhealthconditions(res.data.data);
       });
-      axios
+    axios
       .get(`${config.serverURL}admin/product/getcategorynames`)
       .then((res) => {
         setcategoryData(res.data.data);
       });
-      axios
+    axios
       .get(`${config.serverURL}admin/product/getsubcategorynames`)
       .then((res) => {
         setsubcategoryData(res.data.data);
@@ -490,44 +595,44 @@ const handleRemoveImage=(inex)=>{
                     ></input>
                   </div>
                 </div>
-                <br/>
+                <br />
                 <div className="row">
                   <div className="col-12">
                     <label>feeding instruction</label>
                     <textarea
-                    rows={10}
-                    
+                      rows={10}
+
                       className="form"
                       id="text"
                       type='button'
                       value={feeding_instruction}
-                     onChange={(e)=>{setfeeding_instruction(e.target.value)}}
+                      onChange={(e) => { setfeeding_instruction(e.target.value) }}
                     ></textarea>
                   </div>
-                
-              </div>
-              <div className="row">
+
+                </div>
+                <div className="row">
                   <div className="col-12">
                     <label>Disclaimer</label>
                     <textarea
-                    rows={10}
-                    
+                      rows={10}
+
                       className="form"
                       id="text"
                       type='button'
                       value={disclaimer}
-                     onChange={(e)=>{setdisclaimer(e.target.value)}}
+                      onChange={(e) => { setdisclaimer(e.target.value) }}
                     ></textarea>
                   </div>
-                
-              </div>
-              <br/>
+
+                </div>
+                <br />
                 <div className="row">
                   <div
                     style={{
-                      display:'flex',
+                      display: 'flex',
                       flexDirection: "row",
-                    
+
                     }}
                     className="row flex"
                   >
@@ -561,7 +666,7 @@ const handleRemoveImage=(inex)=>{
                         })}
                       </select>
                     </div>
-                   
+
                     <div className="col-6">
                       <label
                         style={{
@@ -569,11 +674,11 @@ const handleRemoveImage=(inex)=>{
                           fontSize: "14px",
                         }}
                       >
-                      Product Category
+                        Product Category
                       </label>
                       <select
-                      value={parseInt(product_category_id)}
-                        onChange={(e)=>{setproduct_category_id(e.target.value);console.log('value is -------',e);}}
+                        value={parseInt(product_category_id)}
+                        onChange={(e) => { setproduct_category_id(e.target.value); console.log('value is -------', e); }}
                         style={{ width: "100%", fontSize: "12px" }}
                         className="form"
                         id="partnerId"
@@ -585,7 +690,7 @@ const handleRemoveImage=(inex)=>{
                         {categoryData?.map((option) => {
                           return (
                             <>
-                              <option   value={option?._id}>
+                              <option value={option?._id}>
                                 {option?.name}
                               </option>
                             </>
@@ -593,9 +698,9 @@ const handleRemoveImage=(inex)=>{
                         })}
                       </select>
                     </div>
-                 
+
                   </div>
-                
+
                   <div className="col-6 row">
                     <div
                       style={{ flexDirection: "row", display: "flex", gap: 10 }}
@@ -620,7 +725,7 @@ const handleRemoveImage=(inex)=>{
                   <div
                     style={{
                       flexDirection: "row",
-display:'flex',
+                      display: 'flex',
                       alignItems: "center",
                     }}
                     className="row flex"
@@ -632,7 +737,7 @@ display:'flex',
                           fontSize: "14px",
                         }}
                       >
-                        health conditions
+                        breed
                       </label>
                       <select
                         onChange={handlehealth}
@@ -655,6 +760,8 @@ display:'flex',
                         })}
                       </select>
                     </div>
+
+
                     <div className="col-4">
                       <label
                         style={{
@@ -662,11 +769,11 @@ display:'flex',
                           fontSize: "14px",
                         }}
                       >
-                      Product SubCategory
+                        Product SubCategory
                       </label>
                       <select
-                      value={product_sub_category_id}
-                        onChange={(e)=>setproduct_sub_category_id(e.target.value)}
+                        value={product_sub_category_id}
+                        onChange={(e) => setproduct_sub_category_id(e.target.value)}
                         style={{ width: "100%", fontSize: "12px" }}
                         className="form"
                         id="partnerId"
@@ -678,7 +785,7 @@ display:'flex',
                         {subcategoryData?.map((option) => {
                           return (
                             <>
-                              <option  value={option?._id}>
+                              <option value={option?._id}>
                                 {option?.name}
                               </option>
                             </>
@@ -690,7 +797,7 @@ display:'flex',
 
                   <div className="col-6">
                     <div
-                      style={{ flexDirection: "row", display: "flex", gap: 10,flexWrap:'wrap' }}
+                      style={{ flexDirection: "row", display: "flex", gap: 10, flexWrap: 'wrap' }}
                     >
                       {(health_conditions ? health_conditions : [])?.map(
                         (item, index) => {
@@ -827,24 +934,109 @@ display:'flex',
                     </div>
                   );
                 })}
-                <br/>
+                <br />
+                {/* <div className="row">
+                  <div className="col-12">
+                    <label>Related Products</label>
+                    <input
+                      type="text"
+                      style={{ width: '100%', borderColor: 'black', color: 'black' }}
+                      value={searchTermRecommended}
+                      onChange={(e) => setSearchTermRecommended(e.target.value)}
+                    />
+                    {searchTermRecommended && filteredRecommendedProducts.length > 0 && (
+                      <ul className="dropdown">
+                        {filteredRecommendedProducts.map(product => (
+                          <li key={product._id} onClick={() => handleAddRecommendedProduct(product)} style={{ fontSize: 15 }}>
+                            {product.name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div>
+                      {recommendedProducts.map(product => (
+                        <span key={product._id} className="selected-product" style={{ margin: 10, fontSize: 15 }}>
+                          {product.name}{' '}
+                          <button onClick={() => handleRemoveRecommendedProduct(product._id)}> x </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+              
+                <div className="row" style={{ marginTop: 20 }}>
+                  <div className="col-12">
+                    <label>Hot Selling Products</label>
+                    <input
+                      type="text"
+                      value={searchTermHotSelling}
+                      style={{ width: '100%', borderColor: 'black', color: 'black' }}
+                      onChange={(e) => setSearchTermHotSelling(e.target.value)}
+                    />
+                    {searchTermHotSelling && filteredHotSellingProducts.length > 0 && (
+                      <ul className="dropdown">
+                        {filteredHotSellingProducts.map(product => (
+                          <li key={product._id} onClick={() => handleAddHotSellingProduct(product)} style={{ margin: 10, fontSize: 15 }}>
+                            {product.name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div>
+                      {hotSellingProducts.map(product => (
+                        <span key={product._id} className="selected-product" style={{ margin: 10, fontSize: 15 }}>
+                          {product.name}{' '}
+                          <button onClick={() => handleRemoveHotSellingProduct(product._id)}> x </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div> */}
+                <label style={{display:'flex',alignItems:'center'}}>
+                  Available:
+                  <input
+                    type="checkbox"
+                    checked={isAvailable === 1}
+                    onChange={() => setIsAvailable(isAvailable === 1 ? 0 : 1)}
+                  />
+                </label>
+
+                <label style={{display:'flex',alignItems:'center',marginTop:10}}>
+                  Hot Selling:
+                  <input
+                    type="checkbox"
+                    checked={isHotSelling === 1}
+                    onChange={() => setIsHotSelling(isHotSelling === 1 ? 0 : 1)}
+                  />
+                </label>
+
+                <label style={{display:'flex',alignItems:'center',marginTop:10}}>
+                  New:
+                  <input
+                    type="checkbox"
+                    checked={isNew === 1}
+                    onChange={() => setIsNew(isNew === 1 ? 0 : 1)}
+                  />
+                </label>
+
                 <div className="row">
                   <div className="col-6">
                     <label>Upload Images</label>
-                  <input onChange={handleFileUpload} multiple={true} type="file" title={props.addnew?"upload Image":"Change Image"}/>
+                    <input onChange={handleFileUpload} multiple={true} type="file" title={props.addnew ? "upload Image" : "Change Image"} />
                   </div>
-                  </div>
-                  
-                  <div className="row">
-                  {images?.map((item,index)=>{
-                   
-                    return( <img onClick={()=>handleRemoveImage(index)} style={{width:200,height:200}} src={(item?.url?.startsWith('storage'))?(config.serverURL+item?.url):item} alt="" srcset=""/>)
-                  })}
-                  </div>
-                <br/>
+                </div>
+
                 <div className="row">
-                <div className="col-6">
-                <button
+                  {images?.map((item, index) => {
+
+                    return (<img onClick={() => handleRemoveImage(index)} style={{ width: 200, height: 200 }} src={(item?.url?.startsWith('storage')) ? (config.serverURL + item?.url) : item} alt="" srcset="" />)
+                  })}
+                </div>
+                <br />
+                <div className="row">
+                  <div className="col-6">
+                    <button
                       onClick={onDeleteData}
                       className="form"
                       style={{
@@ -858,7 +1050,7 @@ display:'flex',
                     >
                       {"Delete"}
                     </button>
-                    </div>
+                  </div>
                   <div className="col-6">
                     <button
                       onClick={onChangeHandler}
