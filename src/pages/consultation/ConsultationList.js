@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import FontAwesome from 'react-fontawesome';
 import config from "../../config";
+import ConsultationInfo from "./ConsultationInfo";
 // import OrderInfo from "./OrderInfo";
 
 // import CategoryInfo from "./categoryInfo";
@@ -87,7 +88,6 @@ function ConsultationList() {
 
     const onChangeHandler = (e) => {
         const value = e.target.value;
-
         if (e.target.id == "search") {
             if (value == "") {
                 getData()
@@ -126,39 +126,39 @@ function ConsultationList() {
 
         if (filterStatus === "") getData();
         else {
-            axios.get(`${config.serverURL}/societies?filter={"offset": 0,"limit": ${pagePostsLimit},"skip": ${(pageNumber-1)*pagePostsLimit},"order": "${sortType !== "" ? `${ sortBy } ${ sortType }` : "string"}","where": {}}`)
-            .then((res)=>{
-                setData(res.data);
-                console.log(res.data);
-                setModalOpen1(false);
-            })
+            axios.get(`${config.serverURL}/societies?filter={"offset": 0,"limit": ${pagePostsLimit},"skip": ${(pageNumber - 1) * pagePostsLimit},"order": "${sortType !== "" ? `${sortBy} ${sortType}` : "string"}","where": {}}`)
+                .then((res) => {
+                    setData(res.data);
+                    console.log(res.data);
+                    setModalOpen1(false);
+                })
             axios.get(`${config.serverURL}/societies/count?where={}`)
-            .then((res)=>{
-                setRecords(res.data.count);
-            })
+                .then((res) => {
+                    setRecords(res.data.count);
+                })
         }
     }
 
-    const filterForm=()=>{
+    const filterForm = () => {
         setShowForm(true);
         setmodalOpened3(true);
         console.log(modalOpened3);
     }
 
-    const onChangeHandler1 = (e)=>{
+    const onChangeHandler1 = (e) => {
         const value = moment(e.target.value).format('L');
-        if(e.target.id=="1") {
+        if (e.target.id == "1") {
             setCreateDate(value);
         }
-        if(e.target.id=="2") {
+        if (e.target.id == "2") {
             setVerifyDate(value);
         }
-        if(e.target.id=="3") {
+        if (e.target.id == "3") {
             setSignDate(value);
         }
     }
 
-    const handlePagination = (pageNumber)=>{
+    const handlePagination = (pageNumber) => {
         setCurrentPage(pageNumber);
         getData(pageNumber);
     }
@@ -172,61 +172,80 @@ function ConsultationList() {
     // }
 
 
-    const [users,setUsers] = useState([]);
+    const [users, setUsers] = useState([]);
 
-    function getData(pageNumber=1){
-        // if(!localStorage.getItem("userId")) navigate("/");
-        console.log(pageNumber);
-        // axios.get(`${config.serverURL}/vehicles?filter={"offset": 0,"limit": ${pagePostsLimit},"skip": ${(pageNumber-1)*pagePostsLimit},"order": "createdAt desc","where": {"userType": "buyer"}}`)
-        axios.get(`${config.serverURL}admin/consultation/booking/getall`)
-        .then((res)=>{
-            setData(res?.data?.data);
-            console.log(res?.data);
-            setRecords(res?.data?.data?.length);
-        })
 
-        // axios.get(`${config.serverURL}/auth/automationConfig/getAll`)
-        // .then((res)=>{
-        //     setUsers(res.data.data);
-        //     console.log(res.data.data);
-        // })
 
-        // axios.get(`${config.serverURL}/discount-vouchers/count?where={}`)
-        // .then((res)=>{
-           
-        //     console.log(res.data.count);
-        // })
+    // function getData(pageNumber = 1) {
+    //     // if(!localStorage.getItem("userId")) navigate("/");
+    //     console.log(pageNumber);
+
+    //     // axios.get(`${config.serverURL}admin/consultation/booking/getall`)
+    //     axios.get(`${config.serverURL}admin/consultation/getall`)
+    //         .then((res) => {
+    //             setData(res?.data?.data);
+    //             console.log(res?.data);
+    //             setRecords(res?.data?.data?.length);
+    //         })
+
+    //     // axios.get(`${config.serverURL}/auth/automationConfig/getAll`)
+    //     // .then((res)=>{
+    //     //     setUsers(res.data.data);
+    //     //     console.log(res.data.data);
+    //     // })
+
+    //     // axios.get(`${config.serverURL}/discount-vouchers/count?where={}`)
+    //     // .then((res)=>{
+
+    //     //     console.log(res.data.count);
+    //     // })
+    // }
+
+    function getData(pageNumber = 1) {
+        axios.get(`${config.serverURL}admin/consultation/getall`)
+            .then((res) => {
+                console.log(res.data);
+                setData(res?.data?.data || []);
+                setRecords(res?.data?.data?.length || 0);
+            })
+            .catch(err => {
+                console.error("Error fetching data:", err);
+            });
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getData();
-    },[]);
-    return ( 
+    }, []);
+
+    return (
         <>
             <section>
                 <div className="row">
-                    
+
                     <div className="col-12">
                         <div className="col-6">
-                            <Overlay  configs={animate} isOpen={modalOpened4} closeOverlay={closeOverlay}>
-                        {/* {modalOpened4 && <OrderInfo addnew={isaddnew} orderData={selectedBuyer}/>} */}
-                    </Overlay>
+                            <Overlay configs={animate} isOpen={modalOpened4} closeOverlay={closeOverlay}>
+                                {modalOpened4 && <ConsultationInfo addnew={isaddnew} orderData={selectedBuyer} />}
+                            </Overlay>
                         </div>
                     </div>
-                 <Sidebar/>
+                    <Sidebar />
                     <div className="col-lg-11 col-10">
                         <div className="row upperhead">
                             <div className="col-4">
                                 <p className="invoice-tracker"><span className="invoice">CONSULTATION</span> TRACKER</p>
                                 <p className="tracker">Tracker to monitor all consultation bookings.</p>
                             </div>
-                         
+                            <div className="col-12" style={{ textAlign: 'right', display: 'block' }}>
+                                <button type="button" className="btn btn-primary" style={{ display: 'inline-block', margin: 'unset', marginTop: '50px', marginRight: '30px', background: 'white', fontWeight: 600, color: '#254c86', border: 'solid 2px #254c86' }} onClick={() => { setisaddnew(true); setmodalOpened4(true) }}>       New Consultation      </button>
+
+                            </div>
                         </div>
                         <div className="row upperhead">
                             <div className="col-5 my-3">
-                            <input id="search" className="search" type="text"  placeholder="Search By Customer Name" onChange={(e)=>setSearch(e.target.value)} />
+                                <input id="search" className="search" type="text" placeholder="Search By Customer Name" onChange={(e) => setSearch(e.target.value)} />
                             </div>
-                           
+
                             <div className="col-1"></div>
                             <div className="col-4">
                                 <p className="showingrecords">Showing Records...{records}</p>
@@ -236,68 +255,49 @@ function ConsultationList() {
                             <div className="col-lg-12 col-12 setheight2">
                                 <table className="table">
                                     <thead>
-                                          <tr>
-                                            {/* <th>IS USER ACTIVE</th>    */}
-                                            <th>NAME</th>   
+                                        <tr>
 
-                                            <th>PHONE NUMBER</th>
-                                            <th>BOOKING TITLE</th>
-                                            <th>EMAIL</th>
-                                            <th>BOOKING DATE</th>
-                                            <th>BOOKING AMOUNT</th>
-                                           
-                                           
-                                            
-                                            {/* <th>CITY</th> */}
-                                           { /* <th>VEHICLE TYPE</th>
-                                            <th>MODEL</th>
-                                            <th>BRAND</th>
-                                            <th>AREA</th>
-                                            <th>ADDRESS</th>
-                                            <th>CITY</th>*/}
-                                             {/* <th>CREATED AT</th>  */}
+                                            <th>NAME</th>
+
+                                            <th>WHAT YOU GET</th>
+                                            <th>WHAT YOU WANT GET</th>
+                                            <th>WHO IS THIS FOR</th>
+                                            {/* <th>BOOKING DATE</th> */}
+                                            <th>PRICE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {
-                                        // .slice((currentPage - 1) * pagePostsLimit, currentPage * pagePostsLimit)
-                                        data.filter(
-                                            (item) =>
-                                            item?.user?.name?.toLowerCase().includes(search.toLowerCase())).map((item,index)=>{
-                                            return <tr key={ index }>
-                                                {/* <td>{item.isUserActive ? <img src="images/Ellipse 4.svg" width="10%"/>: <img src="images/Ellipse 1.svg" width="10%"/>}</td> */}
-                                                <td className="invoiceNo" >{item?.user?.name}</td>
-                                               <td>{item?.user?.phoneno}</td>
-                                        
-                                               <td>{item?.name}</td>
-                                               <td>{item?.user?.email}</td>
-                                               <td>{moment(item?.booking_date).format('DD/MM/YY')}</td>
-                                               <td>{item?.price}</td>
-                                              
-                                           
-                                               
-                                            </tr>
-                                        })
-                                    }
-                                    </tbody>    
-                                </table>  
+                                        {
+                                            // data.filter((item) =>
+                                            //     item?.user?.name?.toLowerCase().includes(search.toLowerCase())
+                                            // )
+                                            data.map((item, index) => (
+                                                // <tr key={index} onClick={() => getUserInfoForm(item)}>
+
+                                                item.consultations.map((item) => (
+                                                    <tr key={index} onClick={() => getUserInfoForm(item)}>
+                                                        <td className="invoiceNo">{item?.name}</td>
+                                                        <td>{item?.what_you_get}</td>
+                                                        <td>{item?.what_you_wont_get}</td>
+                                                        <td>{item?.who_is_this_for}</td>
+                                                        {/* <td>{moment(item?.booking_date).format('DD/MM/YY')}</td> */}
+                                                        <td>{item?.price}</td>
+                                                    </tr>
+                                                ))
+
+
+                                            ))}
+                                    </tbody>
+
+
+                                </table>
                             </div>
-                            
-                        </div>
-                       
-                        <div className="col-11 pagingcenter">
-                            {/* <Pagination
-                            currentPage={currentPage}
-                            totalItems={records}
-                            itemsPerPage={pagePostsLimit}
-                            onPageChange={(pageNumber) => handlePagination(pageNumber)}
-                            pageNeighbours={2}
-                            /> */}
+
                         </div>
 
                     </div>
                 </div>
-                
+
             </section>
         </>
     );

@@ -190,8 +190,9 @@ function ProductInfo(props) {
     // console.log(base64);
     setimages([...images, base64])
   };
+
   const onChangeHandler = () => {
-    const existingRelatedProductIds = productData?.related_product || []; 
+    const existingRelatedProductIds = productData?.related_product || [];
     const existingHotSellingProductIds = productData?.hot_selling_product || [];
     let data = {
       name,
@@ -215,8 +216,10 @@ function ProductInfo(props) {
       is_available: isAvailable,
       hot_selling: isHotSelling,
       new: isNew,
-      // related_product: Array.from(new Set([...recommendedProducts.map(p => p._id), ...existingRelatedProductIds])),
-      // hot_selling_product: Array.from(new Set([...hotSellingProducts.map(p => p._id), ...existingHotSellingProductIds])),
+      related_product: Array.from(new Set([...recommendedProducts.map(p => p._id), ...existingRelatedProductIds])),
+      hot_selling_product: Array.from(new Set([...hotSellingProducts.map(p => p._id), ...existingHotSellingProductIds])),
+      // related_product: recommendedProducts,
+      // hot_selling_product:hotSellingProducts
     };
     console.log(data);
     if (props.addnew) {
@@ -284,6 +287,12 @@ function ProductInfo(props) {
       //     });
 
     } else {
+      if (Array.isArray(images) && images.length > 0) {
+        console.log(typeof images[0]); // "object"
+        console.log(typeof images); // "object"
+        console.log(images[0]); // Log the object itself
+      }
+
       data = {
         name,
         description,
@@ -298,7 +307,7 @@ function ProductInfo(props) {
         gst,
         product_category_id: parseInt(product_category_id),
         product_sub_category_id: parseInt(product_sub_category_id),
-        images,
+        // images,
         sizes,
         breed: health_conditions,
         // is_available: "1",
@@ -308,18 +317,20 @@ function ProductInfo(props) {
         new: isNew,
         product_id: productData?._id,
 
-        // related_product: Array.from(new Set([
-        //   ...recommendedProducts.map(p => p._id).filter(id => id !== undefined), // Ensure valid IDs
-        //   ...existingRelatedProductIds.filter(id => id !== undefined),
-        // ])),
-    
-        // // Filter and merge hot selling products
-        // hot_selling_product: Array.from(new Set([
-        //   ...hotSellingProducts.map(p => p._id).filter(id => id !== undefined), // Ensure valid IDs
-        //   ...existingHotSellingProductIds.filter(id => id !== undefined),
-        // ])),
+        related_product: Array.from(new Set([
+          ...recommendedProducts.map(p => p._id).filter(id => id !== undefined),
+          ...(Array.isArray(existingRelatedProductIds) ? existingRelatedProductIds : []).filter(id => id !== undefined),
+        ])),
+
+        // Ensure existingHotSellingProductIds is an array
+        hot_selling_product: Array.from(new Set([
+          ...hotSellingProducts.map(p => p._id).filter(id => id !== undefined),
+          ...(Array.isArray(existingHotSellingProductIds) ? existingHotSellingProductIds : []).filter(id => id !== undefined),
+        ])),
       };
-      console.log(data,"datttta",recommendedProducts,hotSellingProducts)
+
+      console.log(data, "datttta", recommendedProducts, hotSellingProducts);
+
       const res = axios
         .post(`${config.serverURL}admin/product/update`, data)
         .then(() => {
@@ -335,6 +346,9 @@ function ProductInfo(props) {
         });
     }
   };
+
+
+
   const handleRemoveImage = (inex) => {
     const filter = images?.filter((item, index) => inex != index);
     setimages([...filter])
@@ -434,12 +448,16 @@ function ProductInfo(props) {
         // Set the state for health conditions
         sethealth_conditions(ids);
         sethealthconditonsname(names);
-        const hotSellingIds = productdata?.hot_selling_products?.map(product => product._id) || [];
-        setHotSellingProducts(hotSellingIds);
-        const relatedIds = productdata?.related_products?.map(product => product._id) || [];
-        setRecommendedProducts(relatedIds);
 
-        console.log(names, ids, "....>>", productdata);
+        // Setting related and hot selling products
+        const hotSellingProducts = productdata?.hot_selling_products || [];
+        setHotSellingProducts(hotSellingProducts);
+
+        const relatedProducts = productdata?.related_products || [];
+        setRecommendedProducts(relatedProducts);
+
+        console.log("Related Products:", relatedProducts);
+        console.log("Hot Selling Products:", hotSellingProducts);
       });
 
     // axios
@@ -935,7 +953,7 @@ function ProductInfo(props) {
                   );
                 })}
                 <br />
-                {/* <div className="row">
+                <div className="row">
                   <div className="col-12">
                     <label>Related Products</label>
                     <input
@@ -964,7 +982,7 @@ function ProductInfo(props) {
                   </div>
                 </div>
 
-              
+
                 <div className="row" style={{ marginTop: 20 }}>
                   <div className="col-12">
                     <label>Hot Selling Products</label>
@@ -992,8 +1010,8 @@ function ProductInfo(props) {
                       ))}
                     </div>
                   </div>
-                </div> */}
-                <label style={{display:'flex',alignItems:'center'}}>
+                </div>
+                <label style={{ display: 'flex', alignItems: 'center' }}>
                   Available:
                   <input
                     type="checkbox"
@@ -1002,7 +1020,7 @@ function ProductInfo(props) {
                   />
                 </label>
 
-                <label style={{display:'flex',alignItems:'center',marginTop:10}}>
+                <label style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
                   Hot Selling:
                   <input
                     type="checkbox"
@@ -1011,7 +1029,7 @@ function ProductInfo(props) {
                   />
                 </label>
 
-                <label style={{display:'flex',alignItems:'center',marginTop:10}}>
+                <label style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
                   New:
                   <input
                     type="checkbox"
