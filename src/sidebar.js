@@ -5,15 +5,10 @@ import config from "./config";
 
 
 function Sidebar() {
-
     const navigation = useNavigate()
     const gotoDashboard = (screen) => {
         navigation(`/${screen}`);
     }
-
-
-
-
 
     const getLogout = () => {
         axios.post(`${config.serverURL}/users/logout`, { userId: localStorage.getItem("userId") })
@@ -43,6 +38,10 @@ function Sidebar() {
                 <div className="col-12" onClick={() => gotoDashboard('orders')}>
                     <img className="dashboard" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8lZsA3JNe_0bPy53ADp_sM-kbStGyEJ999A&s" />
                     <p className="filter" style={{ color: 'black', textAlign: 'center' }}>Orders</p>
+                </div>
+                <div className="col-12" onClick={() => gotoDashboard('consultationscategories')}>
+                    <img className="dashboard" src="https://cdn-icons-png.flaticon.com/512/2603/2603910.png" />
+                    <p className="filter" style={{ color: 'black', textAlign: 'center' }}>Consultations Category</p>
                 </div>
                 <div className="col-12" onClick={() => gotoDashboard('consults')}>
                     <img className="dashboard" src="https://cdn-icons-png.flaticon.com/512/1478/1478254.png" />

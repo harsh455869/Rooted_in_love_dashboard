@@ -8,19 +8,20 @@ import Tabs from "@mui/material/Tabs";
 import config from "../../config";
 
 function ConsultationInfo(props) {
-    console.log(props,"data test...")
+    console.log(props.orderData, "data test...")
     const consultationData = props?.orderData;
     const [value, setValue] = useState(0);
-    const [name, setName] = useState('');
-    const [price, setPrice] = useState('');
-    const [emailBody, setEmailBody] = useState('');
-    const [emailSubject, setEmailSubject] = useState('');
-    const [categoryId, setCategoryId] = useState('');
+    const [name, setName] = useState(consultationData?.name || '');
+    const [price, setPrice] = useState(consultationData?.price || '');
+    const [emailBody, setEmailBody] = useState(consultationData?.email_body || '');
+    const [emailSubject, setEmailSubject] = useState(consultationData?.email_subject || '');
+    const [categoryId, setCategoryId] = useState(consultationData?.category_id || '');
     const [categories, setCategories] = useState([]);
-    const [whatYouGet, setWhatYouGet] = useState('');
-    const [whoIsThisFor, setWhoIsThisFor] = useState('');
-    const [whatYouWontGet, setWhatYouWontGet] = useState('');
-    const [video, setVideo] = useState(null);
+    const [whatYouGet, setWhatYouGet] = useState(consultationData?.what_you_get || '');
+    const [whoIsThisFor, setWhoIsThisFor] = useState(consultationData?.who_is_this_for || '');
+    const [whatYouWontGet, setWhatYouWontGet] = useState(consultationData?.what_you_wont_get || '');
+    const [video, setVideo] = useState(consultationData?.video || null);
+    const [consultationid, setConsultationId] = useState(consultationData?._id || '')
 
     useEffect(() => {
 
@@ -62,8 +63,25 @@ function ConsultationInfo(props) {
                 await axios.post(`${config.serverURL}admin/consultation/add`, consultationData);
                 toast("Successfully Created", { position: "bottom-center", type: "success" });
             } else {
-                toast("This section is for creating new consultations only.", { position: "bottom-center", type: "error" });
-                return;
+                const consultationData = {
+                    consultation_id: consultationid,
+                    name,
+                    price,
+                    category_id: categoryId,
+                    what_you_get: whatYouGet,
+                    who_is_this_for: whoIsThisFor,
+                    what_you_wont_get: whatYouWontGet,
+                    video,
+                    email_subject: emailSubject,
+                    email_body: emailBody,
+                };
+                console.log(consultationData, "consultationDataconsultationData")
+                if (!name || !price || !categoryId) {
+                    toast("Name, Price, and Category ID are required", { position: "bottom-center", type: "error" });
+                    return;
+                }
+                await axios.post(`${config.serverURL}admin/consultation/update`, consultationData);
+                toast("Successfully Created", { position: "bottom-center", type: "success" });
             }
 
             window.location.reload();
@@ -75,20 +93,20 @@ function ConsultationInfo(props) {
 
     const onDeleteData = () => {
         const data = { consultation_id: consultationData?._id };
-        axios.post(`${config.serverURL}admin/consultation/delete`,data)
-          .then(() => {
-            toast("Successfully Deleted", {
-              position: "bottom-center",
-              type: "success",
+        axios.post(`${config.serverURL}admin/consultation/delete`, data)
+            .then(() => {
+                toast("Successfully Deleted", {
+                    position: "bottom-center",
+                    type: "success",
+                });
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            })
+            .catch(e => {
+                console.log(e);
             });
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          })
-          .catch(e => {
-            console.log(e);
-          });
-      };
+    };
 
     useEffect(() => {
         if (props.addnew) {
@@ -226,17 +244,17 @@ function ConsultationInfo(props) {
                             </div>
                         </div> */}
                         <div className="row" style={{ marginTop: 20 }}>
-              <div className="col-6">
-                <button onClick={onDeleteData} className="form" style={{ backgroundColor: "red", color: "white" }}>
-                  Delete
-                </button>
-              </div>
-              <div className="col-6">
-                <button onClick={onChangeHandler} className="form" style={{ backgroundColor: "#17545E", color: "white" }}>
-                  {props.addnew ? 'Create' : 'Save'}
-                </button>
-              </div>
-            </div>
+                            <div className="col-6">
+                                <button onClick={onDeleteData} className="form" style={{ backgroundColor: "red", color: "white" }}>
+                                    Delete
+                                </button>
+                            </div>
+                            <div className="col-6">
+                                <button onClick={onChangeHandler} className="form" style={{ backgroundColor: "#17545E", color: "white" }}>
+                                    {props.addnew ? 'Create' : 'Save'}
+                                </button>
+                            </div>
+                        </div>
                     </TabPanel>
                 </div>
             </div>

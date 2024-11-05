@@ -205,9 +205,6 @@ const onChangeHandler = async () => {
         });
       }
 
-  
-     
-
       window.location.reload();
   } catch (error) {
       console.error(error);
