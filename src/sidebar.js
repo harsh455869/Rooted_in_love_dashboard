@@ -73,6 +73,10 @@ function Sidebar() {
                     <img className="dashboard" src="https://banner2.cleanpng.com/20191024/sxu/transparent-health-icon-medical-icon-lifeline-in-a-heart-outli-5db133e3932a99.7637511515718942436028.jpg" />
                     <p className="filter" style={{ color: 'black', textAlign: 'center' }}>Bcs</p>
                 </div>
+                <div className="col-12" onClick={() => gotoDashboard('bcsResultList')}>
+                    <img className="dashboard" src="https://banner2.cleanpng.com/20191024/sxu/transparent-health-icon-medical-icon-lifeline-in-a-heart-outli-5db133e3932a99.7637511515718942436028.jpg" />
+                    <p className="filter" style={{ color: 'black', textAlign: 'center' }}>Bcs Result</p>
+                </div>
                 <div className="col-12" onClick={() => gotoDashboard('breed')}>
                     <img className="dashboard" src="https://cdn-icons-png.flaticon.com/512/2603/2603910.png" />
                     <p className="filter" style={{ color: 'black', textAlign: 'center' }}>Breed</p>

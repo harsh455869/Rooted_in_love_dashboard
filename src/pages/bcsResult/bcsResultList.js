@@ -5,10 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import Overlay from "react-overlay-component";
 import 'react-pagination-bar/dist/index.css';
 import config from "../../config";
-import ConsultationCategoryInfo from "./ConsultationCategoryInfo";
-;
+import BcsResultInfo from "./bcsResultInfo";
 
-function ConsulationCategoryList() {
+function BcsResultList() {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [modalOpened4, setmodalOpened4] = useState(false);
@@ -18,16 +17,6 @@ function ConsulationCategoryList() {
     const animate = true;
 
     const [isaddnew, setisaddnew] = useState(false)
-
-    const [img, setImg] = useState("");
-
-
-    const setFile = (e) => {
-        console.log("Entered");
-        console.log(e.target.files[0].name);
-        setImg(e.target.files[0].name);
-    }
-
 
     const closeOverlay = () => {
         setisaddnew(false)
@@ -39,13 +28,12 @@ function ConsulationCategoryList() {
     const getUserInfoForm = (obj) => {
         console.log(obj);
         setmodalOpened4(true);
-        console.log(modalOpened4);
         setSelectedBuyer(obj);
     }
 
     function getData(pageNumber = 1) {
         console.log(pageNumber);
-        axios.get(`${config.serverURL}admin/consultation/getall`)
+        axios.get(`${config.serverURL}admin/bsc/result/getall`)
             .then((res) => {
                 setData(res.data.data);
                 console.log(res.data);
@@ -61,11 +49,10 @@ function ConsulationCategoryList() {
         <>
             <section>
                 <div className="row">
-
                     <div className="col-12">
                         <div className="col-6">
                             <Overlay configs={animate} isOpen={modalOpened4} closeOverlay={closeOverlay}>
-                                {modalOpened4 && <ConsultationCategoryInfo addnew={isaddnew} categoryData={selectedBuyer} />}
+                                {modalOpened4 && <BcsResultInfo addnew={isaddnew} categoryData={selectedBuyer} />}
                             </Overlay>
                         </div>
                     </div>
@@ -73,11 +60,11 @@ function ConsulationCategoryList() {
                     <div className="col-lg-11 col-10">
                         <div className="row upperhead">
                             <div className="col-4">
-                                <p className="invoice-tracker"><span className="invoice">Consultation Category</span> TRACKER</p>
-                                <p className="tracker">Tracker to monitor all Consultation Categories.</p>
+                                <p className="invoice-tracker"><span className="invoice">BCS RESULT</span> TRACKER</p>
+                                <p className="tracker">Tracker to monitor all BCS RESULTS.</p>
                             </div>
                             <div className="col-12" style={{ textAlign: 'right', display: 'block' }}>
-                                <button type="button" className="btn btn-primary" style={{ display: 'inline-block', margin: 'unset', marginTop: '50px', marginRight: '30px', background: 'white', fontWeight: 600, color: '#254c86', border: 'solid 2px #254c86' }} onClick={() => { setisaddnew(true); setmodalOpened4(true) }}>       New Consultation Category      </button>
+                                <button type="button" className="btn btn-primary" style={{ display: 'inline-block', margin: 'unset', marginTop: '50px', marginRight: '30px', background: 'white', fontWeight: 600, color: '#254c86', border: 'solid 2px #254c86' }} onClick={() => { setisaddnew(true); setmodalOpened4(true) }}>New BCS RESULT</button>
                             </div>
                         </div>
                         <div className="row upperhead">
@@ -95,58 +82,42 @@ function ConsulationCategoryList() {
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            {/* <th>IS USER ACTIVE</th>    */}
-                                            <th>NAME</th>
-                                            <th></th>
-                                            <th></th>
-
-                                            {/* <th>CITY</th> */}
-                                            { /* <th>VEHICLE TYPE</th>
-                                            <th>MODEL</th>
-                                            <th>BRAND</th>
-                                            <th>AREA</th>
-                                            <th>ADDRESS</th>
-                                            <th>CITY</th>*/}
-                                            {/* <th>CREATED AT</th>  */}
+                                            <th>Score</th>
+                                            <th>Title</th>
+                                            <th>Dog Weight</th>
+                                            <th>Body Fat</th>
+                                            <th>Description</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {
-                                            // .slice((currentPage - 1) * pagePostsLimit, currentPage * pagePostsLimit)
+                                        {       
                                             data.filter(
                                                 (item) =>
-                                                    item.name.toLowerCase().includes(search.toLowerCase())).map((item, index) => {
-                                                        return <tr key={index}>
-                                                            {/* <td>{item.isUserActive ? <img src="images/Ellipse 4.svg" width="10%"/>: <img src="images/Ellipse 1.svg" width="10%"/>}</td> */}
-                                                            <td className="invoiceNo" onClick={() => getUserInfoForm(item)}>{item.name}</td>
-                                                            <td></td>
-                                                            <td></td>
-
-                                                        </tr>
-                                                    })
+                                                    item.title.toLowerCase().includes(search.toLowerCase()) ||
+                                                    item.dog_weight.toLowerCase().includes(search.toLowerCase()) ||
+                                                    item.body_fat.toLowerCase().includes(search.toLowerCase()) ||
+                                                    item.description.toLowerCase().includes(search.toLowerCase())
+                                            ).map((item, index) => {
+                                                return (
+                                                    <tr key={index} onClick={() => getUserInfoForm(item)}>
+                                                        <td>{item.score}</td>
+                                                        <td>{item.title}</td>
+                                                        <td>{item.dog_weight}</td>
+                                                        <td>{item.body_fat}</td>
+                                                        <td>{item.description}</td>
+                                                    </tr>
+                                                )
+                                            })
                                         }
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
-
-                        <div className="col-11 pagingcenter">
-                            {/* <Pagination
-                            currentPage={currentPage}
-                            totalItems={records}
-                            itemsPerPage={pagePostsLimit}
-                            onPageChange={(pageNumber) => handlePagination(pageNumber)}
-                            pageNeighbours={2}
-                            /> */}
-                        </div>
-
                     </div>
                 </div>
-
             </section>
         </>
     );
 }
 
-export default ConsulationCategoryList;
+export default BcsResultList;

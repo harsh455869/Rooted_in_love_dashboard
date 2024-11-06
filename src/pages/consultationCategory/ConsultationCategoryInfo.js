@@ -17,11 +17,10 @@ function ConsultationCategoryInfo(props) {
     const categoryData = props?.categoryData
     const [customerData, setcustomerData] = useState([]);
     const [name, setname] = useState(categoryData?.name)
- 
+
     const onChangeHandler = () => {
         let data = {
             name
-
         };
         if (props.addnew) {
             if (name.length < 0) {
@@ -44,55 +43,25 @@ function ConsultationCategoryInfo(props) {
                 });
         }
         else {
-            // data = { name, category_id: categoryData?._id }
-            // const res = axios
-            //     .post(
-            //         `${config.serverURL}admin/productcategory/update`,
-            //         data
-            //     )
-            //     .then(() => {
-            //         toast("Sucessfully Updated", {
-            //             position: "bottom-center",
-            //             type: "success",
-            //         });
-            //         window.location.reload()
-            //     })
-            //     .catch((e) => {
-            //         console.error(e)
-            //         console.log(e);
-            //     });
-        }
-    };
-
-    function submitHandler() {
-        axios
-            .patch(
-                `${config.serverURL}/users/` + props.voucherInfo.userId,
-                customerData,
-                {
-                    headers: {
-                        token: localStorage.getItem("token"),
-                        userId: localStorage.getItem("userId"),
-                    },
-                }
-            )
-            .then((res) => {
-                if (res.data.statusname == 200) {
+            data = { name, category_id: categoryData?._id }
+            const res = axios
+                .post(
+                    `${config.serverURL}admin/consultationcategory/update`,
+                    data
+                )
+                .then(() => {
                     toast("Sucessfully Updated", {
                         position: "bottom-center",
                         type: "success",
                     });
-                    //   getData();
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-                toast(err.response.data.message, {
-                    position: "bottom-center",
-                    type: "error",
+                    window.location.reload()
+                })
+                .catch((e) => {
+                    console.error(e)
+                    console.log(e);
                 });
-            });
-    }
+        }
+    };
 
     const handleTabs = (e, val) => {
         console.log(val);
@@ -101,26 +70,26 @@ function ConsultationCategoryInfo(props) {
 
     const onDeleteData = () => {
         const data = { category_id: categoryData?._id }
-        // const res = axios
-        //     .post(
-        //         `${config.serverURL}admin/productcategory/delete`
-        //         , data
-        //     )
-        //     .then(() => {
+        const res = axios
+            .post(
+                `${config.serverURL}admin/consultationcategory/delete`
+                , data
+            )
+            .then(() => {
 
-        //         toast("Sucessfully Deleted", {
-        //             position: "bottom-center",
-        //             type: "success",
-        //         });
-        //         setTimeout(() => {
-        //             window.location.reload();
-        //         }, 1000)
+                toast("Sucessfully Deleted", {
+                    position: "bottom-center",
+                    type: "success",
+                });
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000)
 
 
-        //     })
-        //     .catch((e) => {
-        //         console.log(e);
-        //     });
+            })
+            .catch((e) => {
+                console.log(e);
+            });
 
     }
 

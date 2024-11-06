@@ -14,6 +14,8 @@ import ConsultationList from './pages/consultation/ConsultationList.js'
 import BreedList from './pages/breed/breedList.js'
 import Profile from './pages/profile/profile.js'
 import ConsulationCategoryList from './pages/consultationCategory/consulationCategoryLIst.js'
+import BcsResultList from './pages/bcsResult/bcsResultList.js'
+
 function App() {
   return (
     <BrowserRouter>
@@ -40,7 +42,8 @@ function App() {
          <Route path="/orders" element={<OrderList/>} /> 
          <Route path="/consults" element={<ConsultationList/>} /> 
          <Route path="/breed" element={<BreedList/>} />
-         <Route path="/consultationscategories" element={<ConsulationCategoryList/>} /> 
+         <Route path="/consultationscategories" element={<ConsulationCategoryList/>} />
+         <Route path="/bcsResultList" element={<BcsResultList/>} /> 
       </Routes>
     </BrowserRouter>
   )
