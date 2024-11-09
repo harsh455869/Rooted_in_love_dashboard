@@ -86,11 +86,11 @@ function BcsList() {
                     <div className="col-lg-11 col-10">
                         <div className="row upperhead">
                             <div className="col-4">
-                                <p className="invoice-tracker"><span className="invoice">BCS</span> TRACKER</p>
-                                <p className="tracker">Tracker to monitor all BCS Question & options.</p>
+                                <p className="invoice-tracker"><span className="invoice">BSC</span> TRACKER</p>
+                                <p className="tracker">Tracker to monitor all BSC Question & options.</p>
                             </div>
                             <div className="col-12" style={{ textAlign: 'right', display: 'block' }}>
-                                <button type="button" className="btn btn-primary" style={{ display: 'inline-block', margin: 'unset', marginTop: '50px', marginRight: '30px', background: 'white', fontWeight: 600, color: '#254c86', border: 'solid 2px #254c86' }} onClick={() => { setisaddnew(true); setmodalOpened4(true) }}>       New BCS      </button>
+                                <button type="button" className="btn btn-primary" style={{ display: 'inline-block', margin: 'unset', marginTop: '50px', marginRight: '30px', background: 'white', fontWeight: 600, color: '#254c86', border: 'solid 2px #254c86' }} onClick={() => { setisaddnew(true); setmodalOpened4(true) }}>       New BSC      </button>
                             </div>
                         </div>
                         <div className="row upperhead">

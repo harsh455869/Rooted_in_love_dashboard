@@ -5,9 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import Overlay from "react-overlay-component";
 import 'react-pagination-bar/dist/index.css';
 import config from "../../config";
-import BcsResultInfo from "./bcsResultInfo";
+import BundleInfo from "./BundleInfo";
 
-function BcsResultList() {
+function BundleList() {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [modalOpened4, setmodalOpened4] = useState(false);
@@ -17,6 +17,8 @@ function BcsResultList() {
     const animate = true;
 
     const [isaddnew, setisaddnew] = useState(false)
+
+    const [img, setImg] = useState("");
 
     const closeOverlay = () => {
         setisaddnew(false)
@@ -28,12 +30,13 @@ function BcsResultList() {
     const getUserInfoForm = (obj) => {
         console.log(obj);
         setmodalOpened4(true);
+        console.log(modalOpened4);
         setSelectedBuyer(obj);
     }
 
     function getData(pageNumber = 1) {
         console.log(pageNumber);
-        axios.get(`${config.serverURL}admin/bsc/result/getall`)
+        axios.get(`${config.serverURL}admin/bundle/getall`)
             .then((res) => {
                 setData(res.data.data);
                 console.log(res.data);
@@ -49,10 +52,11 @@ function BcsResultList() {
         <>
             <section>
                 <div className="row">
+
                     <div className="col-12">
                         <div className="col-6">
                             <Overlay configs={animate} isOpen={modalOpened4} closeOverlay={closeOverlay}>
-                                {modalOpened4 && <BcsResultInfo addnew={isaddnew} categoryData={selectedBuyer} />}
+                                {modalOpened4 && <BundleInfo addnew={isaddnew} categoryData={selectedBuyer} />}
                             </Overlay>
                         </div>
                     </div>
@@ -60,11 +64,11 @@ function BcsResultList() {
                     <div className="col-lg-11 col-10">
                         <div className="row upperhead">
                             <div className="col-4">
-                                <p className="invoice-tracker"><span className="invoice">BSC RESULT</span> TRACKER</p>
-                                <p className="tracker">Tracker to monitor all BSC RESULTS.</p>
+                                <p className="invoice-tracker"><span className="invoice">Bundle</span> TRACKER</p>
+                                <p className="tracker">Tracker to monitor all Bundle.</p>
                             </div>
                             <div className="col-12" style={{ textAlign: 'right', display: 'block' }}>
-                                <button type="button" className="btn btn-primary" style={{ display: 'inline-block', margin: 'unset', marginTop: '50px', marginRight: '30px', background: 'white', fontWeight: 600, color: '#254c86', border: 'solid 2px #254c86' }} onClick={() => { setisaddnew(true); setmodalOpened4(true) }}>New BSC RESULT</button>
+                                <button type="button" className="btn btn-primary" style={{ display: 'inline-block', margin: 'unset', marginTop: '50px', marginRight: '30px', background: 'white', fontWeight: 600, color: '#254c86', border: 'solid 2px #254c86' }} onClick={() => { setisaddnew(true); setmodalOpened4(true) }}>       New Bundle     </button>
                             </div>
                         </div>
                         <div className="row upperhead">
@@ -82,31 +86,38 @@ function BcsResultList() {
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            <th>Score</th>
-                                            <th>Title</th>
-                                            <th>Dog Weight</th>
-                                            <th>Body Fat</th>
-                                            <th>Description</th>
+                                            <th>NAME</th>
+                                            <th>IS AVAILABLE</th>
+                                            <th>PRODUCT NAMES</th>
+                                            <th>IMAGE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {       
+                                        {
                                             data.filter(
                                                 (item) =>
-                                                    item.title.toLowerCase().includes(search.toLowerCase()) ||
-                                                    item.dog_weight.toLowerCase().includes(search.toLowerCase()) ||
-                                                    item.body_fat.toLowerCase().includes(search.toLowerCase()) ||
-                                                    item.description.toLowerCase().includes(search.toLowerCase())
+                                                    item.name.toLowerCase().includes(search.toLowerCase())
                                             ).map((item, index) => {
                                                 return (
-                                                    <tr key={index} onClick={() => getUserInfoForm(item)}>
-                                                        <td>{item.score}</td>
-                                                        <td>{item.title}</td>
-                                                        <td>{item.dog_weight}</td>
-                                                        <td>{item.body_fat}</td>
-                                                        <td>{item.description}</td>
+                                                    <tr key={index}>
+                                                        <td className="invoiceNo" onClick={() => getUserInfoForm(item)}>{item.name}</td>
+                                                        <td>{item.is_available ? 'Yes' : 'No'}</td>
+                                                        <td>
+                                                            <ul>
+                                                                {item.products.map((product, index) => (
+                                                                    <li key={index}>{product.name}</li>
+                                                                ))}
+                                                            </ul>
+                                                        </td>
+                                                        <td>
+                                                            <img
+                                                                src={`${config.serverURL}/${item.image}`}
+                                                                alt={item.name}
+                                                                style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                                                            />
+                                                        </td>
                                                     </tr>
-                                                )
+                                                );
                                             })
                                         }
                                     </tbody>
@@ -115,9 +126,10 @@ function BcsResultList() {
                         </div>
                     </div>
                 </div>
+
             </section>
         </>
     );
 }
 
-export default BcsResultList;
+export default BundleList;

@@ -326,14 +326,14 @@ function BcsResultInfo(props) {
                     <div className="col-12">
                         <p className="information">
                             {addnew ? (
-                                <>BCS RESULT<span className="bolding"> CREATE</span></>
+                                <>BSC RESULT<span className="bolding"> CREATE</span></>
                             ) : (
-                                <>BCS RESULT<span className="bolding"> INFO</span></>
+                                <>BSC RESULT<span className="bolding"> INFO</span></>
                             )}
                         </p>
                         <AppBar position="static">
                             <Tabs value={value} onChange={handleTabs}>
-                                <Tab label="BCS RESULT Details" />
+                                <Tab label="BSC RESULT Details" />
                             </Tabs>
                         </AppBar>
 

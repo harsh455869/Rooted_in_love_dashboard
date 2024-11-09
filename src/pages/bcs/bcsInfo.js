@@ -168,7 +168,7 @@ function BcsInfo(props) {
             <div className="col-12">
               <p className="information">
                 {
-                  props.addnew ? <>BCS<span className="bolding"> CREATE</span></> : <>BCS<span className="bolding"> INFO</span></>
+                  props.addnew ? <>BSC<span className="bolding"> CREATE</span></> : <>BSC<span className="bolding"> INFO</span></>
                 }
               </p>
 
