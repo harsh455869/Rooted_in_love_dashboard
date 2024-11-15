@@ -58,7 +58,7 @@ function CustomerInfo(props) {
   };
   const onChangeHandlerData = () => {
     const data = {
-      disable:!isUserActive,
+      // disable:!isUserActive,
       name:customerName,
       phoneno:mobileNumber,
       email,
@@ -90,7 +90,7 @@ function CustomerInfo(props) {
     const data={user_id:props?.customerInfo?._id}
     const res = axios
       .post(
-        `${config.serverURL}admin/user/update`
+        `${config.serverURL}admin/user/delete`,data
         
       )
       .then(() => {
@@ -102,13 +102,6 @@ function CustomerInfo(props) {
         setTimeout(()=>{
           window.location.reload();
         }, 1000)
-
-       
-     
-      
-       
-        
-       
       })
       .catch((e) => {
         console.log(e);

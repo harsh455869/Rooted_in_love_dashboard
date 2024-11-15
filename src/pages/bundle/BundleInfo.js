@@ -19,7 +19,7 @@ function BundleInfo(props) {
     const [image, setImage] = useState("");  // Image state
     const [allProducts, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const [initialImage, setInitialImage] = useState("");
     // Fetch product data from the API
     useEffect(() => {
         const fetchProducts = async () => {
@@ -73,19 +73,49 @@ function BundleInfo(props) {
         setProducts(updatedProducts);
     };
 
-    const onChangeHandler = () => {
+    
+  const convertToBase64 = (file) => {
+    console.log(file)
+    return new Promise(async (resolve, reject) => {
+      //const response = await fetch(file);
+      //const blob = await response.blob();
+      const blob = new Blob([file], { type: file.type });
+      console.log("Blob: " + blob + "/" + file.type)
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        const result = fileReader.result
+        resolve(result.toString());
+        console.log(result)
+      };
+      fileReader.readAsDataURL(blob);
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+    const onChangeHandler = async () => {
         let data = {
             name,
             free_delivery: freeDelivery,
             is_available: isAvailable,
             discount,
             products,
-            image
+            // image
         };
+        if (image && image instanceof File) {
+            const base64Img = await convertToBase64(image);
+            data.image = base64Img; // Add image only if it's changed
+          } else if (image !== initialImage) {
+            // If no new image is selected but image is different from the initial image (edited bundle),
+            // it means the user wants to keep the original image.
+            data.image = image; // No change, send the current image (could be URL or base64)
+          }
+      
 
         const apiEndpoint = props.addnew
             ? `${config.serverURL}admin/bundle/create`
-            : `${config.serverURL}admin/consultationcategory/update`;
+            : `${config.serverURL}admin/bundle/update`;
 
         if (props.addnew) {
             if (name.length < 1) {
@@ -93,19 +123,24 @@ function BundleInfo(props) {
             }
             axios
                 .post(apiEndpoint, data)
-                .then(() => {
+                .then((res) => {
+                    if(res.data.status_code === 200){
+                        
+                    }
                     toast("Successfully Created", { position: "bottom-center", type: "success" });
                 })
                 .catch((e) => {
                     console.log(e);
                 });
         } else {
-            data = { name, category_id: categoryData?._id, ...data };
+            console.log(categoryData._id,"////DATA>>",data)
+            data = { bundle_id: categoryData?._id, ...data };
+            console.log("..new,,",data)
             axios
                 .post(apiEndpoint, data)
                 .then(() => {
                     toast("Successfully Updated", { position: "bottom-center", type: "success" });
-                    window.location.reload();
+                    // window.location.reload();
                 })
                 .catch((e) => {
                     console.error(e);
@@ -151,6 +186,7 @@ function BundleInfo(props) {
             setDiscount(categoryData?.discount || 0);
             setProducts(categoryData?.products || [{ product_id: "", size_id: null, qty: 1 }]);
             setImage(categoryData?.image || "");
+            setInitialImage(categoryData?.image || "");
         }
     }, [props.addnew, categoryData]);
 
